@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 const jwt = localStorage.getItem("token");
 const instance = axios.create({
