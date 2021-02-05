@@ -17,7 +17,7 @@ import {
   urlSignInWithFacebook,
   checkLogin,
   uploadAvatar,
-} from "../../api/index";
+} from "../../api/index.js";
 const validationSchema = yup.object().shape({
   email: yup.string().email("Email invalid").required("Email is required"),
   password: yup
