@@ -7,12 +7,14 @@ import { Search } from "../component/book/search";
 export const Library = () => {
   return (
     <div>
-      <div class="main-content-wrapper d-flex clearfix">
+      <div className="main-content-wrapper d-flex clearfix">
         <Search />
-        <Header />
+        <div className="main-content-wrapper d-flex clearfix">
+          <Header />
+        </div>
         <Categories />
-        <div class="amado_product_area section-padding-100">
-          <div class="container-fluid">
+        <div className="amado_product_area section-padding-100">
+          <div className="container-fluid">
             <ListProducts />
           </div>
         </div>
