@@ -16,26 +16,26 @@ const upload = axios.create({
     "Content-Type": "multipart/form-data",
   },
 });
-module.exports.checkLogin = async function (params) {
+export const checkLogin = async function (params) {
   return await instance.post("/auth/login", params);
 };
-module.exports.getAllBookTypes = async function () {
+export const getAllBookTypes = async function () {
   return await instance.get("/typebook/getAll");
 };
-module.exports.getAllAuthor = async function () {
+export const getAllAuthor = async function () {
   return await instance.get("/author/getAll");
 };
-module.exports.getAllPublisher = async function () {
+export const getAllPublisher = async function () {
   return await instance.get("/publisher/getAll");
 };
-module.exports.getMe = async function () {
+export const getMe = async function () {
   return await instance.get("/auth/me");
 };
-module.exports.uploadAvatar = async function (params) {
+export const uploadAvatar = async function (params) {
   return await upload.post("/upload/images", params);
 };
-module.exports.urlSignInWithGoogle =
+export const urlSignInWithGoogle =
   "https://e-libraryapi.herokuapp.com/auth/google";
-module.exports.urlSignInWithFacebook =
+export const urlSignInWithFacebook =
   // "http://localhost:4000/auth/facebook";
   "https://e-libraryapi.herokuapp.com/auth/facebook";
