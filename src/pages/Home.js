@@ -2,7 +2,7 @@ import React from "react";
 import { Header } from "../component/header/header";
 import { Footer } from "../component/footer/footer";
 import { Search } from "../component/book/search";
-import { ListProducts } from "../component/book/listBook";
+import { Books } from "../component/book/listBook";
 import { useAuth } from "../hooks/useAuth";
 
 export const Home = () => {
@@ -15,9 +15,8 @@ export const Home = () => {
           <Header />
         </div>
         <div className="products-catagories-area clearfix">
-          <div className="amado-pro-catagory clearfix">
-            <ListProducts />
-          </div>
+          <div className="amado-pro-catagory clearfix"></div>
+          <Books />
         </div>
       </div>
       <Footer />

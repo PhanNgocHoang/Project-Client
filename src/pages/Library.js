@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "../component/header/header";
 import { Footer } from "../component/footer/footer";
-import { ListProducts } from "../component/book/listBook";
+import { Books } from "../component/book/listBook";
 import { Categories } from "../component/category/category";
 import { Search } from "../component/book/search";
 export const Library = () => {
@@ -15,7 +15,7 @@ export const Library = () => {
         <Categories />
         <div className="amado_product_area section-padding-100">
           <div className="container-fluid">
-            <ListProducts />
+            <Books />
           </div>
         </div>
       </div>

@@ -151,7 +151,7 @@ export const Header = () => {
             </li>
             <li>
               <NavLink to="/library">
-                Library <i class="fa fa-book" aria-hidden="true"></i>
+                Library <i className="fa fa-book" aria-hidden="true"></i>
               </NavLink>
             </li>
             <li>
