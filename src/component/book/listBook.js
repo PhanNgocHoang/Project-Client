@@ -23,14 +23,11 @@ export const Books = () => {
         dispatch({ type: types.NEW_BOOKS, payload: result.data.data.data });
       }
     } catch (error) {
-      return Alert.error(
-        `<div role="alert">${error.response.data.message}</div>`,
-        {
-          html: true,
-          position: "top-right",
-          effect: "slide",
-        }
-      );
+      return Alert.error(`<div role="alert">Can Not Get New Book</div>`, {
+        html: true,
+        position: "top-right",
+        effect: "slide",
+      });
     }
   };
   useEffect(() => {
