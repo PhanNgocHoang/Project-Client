@@ -15,8 +15,9 @@ export const Home = () => {
           <Header />
         </div>
         <div className="products-catagories-area clearfix">
-          <div className="amado-pro-catagory clearfix"></div>
-          <Books />
+          <div className="amado-pro-catagory clearfix">
+            <Books />
+          </div>
         </div>
       </div>
       <Footer />
