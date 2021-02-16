@@ -39,7 +39,7 @@ export const Books = () => {
   return (
     <div className="single-products-catagory clearfix">
       {newBooks.map((item) => (
-        <Card key={item._id} style={{ width: "18rem" }}>
+        <Card key={item._id}>
           <Card.Img variant="top" src={item.images[0].url} />
           <Card.Body>
             <Card.Title>{item.book_name}</Card.Title>
