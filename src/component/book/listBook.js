@@ -37,9 +37,9 @@ export const Books = () => {
     return state.newBooks.data;
   });
   return (
-    <div className="single-products-catagory clearfix">
+    <div>
       {newBooks.map((item) => (
-        <Card key={item._id}>
+        <Card key={item._id} className="single-products-catagory clearfix">
           <Card.Img variant="top" src={item.images[0].url} />
           <Card.Body>
             <Card.Title>{item.book_name}</Card.Title>
