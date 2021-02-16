@@ -7,7 +7,7 @@ import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
 import { useDispatch, useSelector } from "react-redux";
 import * as types from "../../constants/index";
-import { Card } from "react-bootstrap";
+import { Card, CardColumns } from "react-bootstrap";
 export const Books = () => {
   const dispatch = useDispatch();
 
