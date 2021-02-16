@@ -40,7 +40,11 @@ export const Books = () => {
     <div className="single-products-catagory clearfix">
       {newBooks.map((item) => (
         <Card key={item._id}>
-          <Card.Img variant="top" src={item.images[0].url} />
+          <Card.Img
+            variant="top"
+            src={item.images[0].url}
+            style={{ width: "50%", height: "50%" }}
+          />
           <Card.Body>
             <Card.Title>{item.book_name}</Card.Title>
             <Card.Text
