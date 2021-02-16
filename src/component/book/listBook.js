@@ -37,7 +37,7 @@ export const Books = () => {
     return state.newBooks.data;
   });
   return (
-    <div>
+    <CardColumns>
       {newBooks.map((item) => (
         <Card key={item._id} className="single-products-catagory clearfix">
           <Card.Img variant="top" src={item.images[0].url} />
@@ -61,6 +61,6 @@ export const Books = () => {
           </Card.Footer>
         </Card>
       ))}
-    </div>
+    </CardColumns>
   );
 };
