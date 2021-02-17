@@ -34,8 +34,11 @@ export const getMe = async function () {
 export const uploadAvatar = async function (params) {
   return await upload.post("/upload/images", params);
 };
-export const getBook = async function () {
-  return await instance.get("/books");
+export const getBook = async function (params) {
+  return await instance.get(`/books?${params}`);
+};
+export const getBookDetails = async function (params) {
+  return await instance.get(`/books/${params}`);
 };
 export const urlSignInWithGoogle =
   "https://e-libraryapi.herokuapp.com/auth/google";

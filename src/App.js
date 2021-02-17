@@ -1,13 +1,16 @@
-import { Switch, Route } from "react-router-dom";
-import { Home } from "./pages/Home";
-import { Library } from "./pages/Library";
+import { Header } from "./component/header/header";
+import { Footer } from "./component/footer/footer";
+import { Search } from "./component/book/search";
+import { RouterComponent } from "./component/router";
 function App() {
   return (
-    <div>
-      <Switch>
-        <Route path="/library" exact component={Library} />
-        <Route path="/" exact component={Home} />
-      </Switch>
+    <div className="pageWrapper">
+      <Search />
+      <Header />
+      <div id="page-content">
+        <RouterComponent></RouterComponent>
+      </div>
+      <Footer />
     </div>
   );
 }

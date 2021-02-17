@@ -1,43 +1,108 @@
 import React from "react";
 export const Footer = () => {
   return (
-    <div>
-      <footer className="footer_area clearfix">
+    <footer id="footer" className="footer-2">
+      <div className="site-footer">
         <div className="container">
-          <div className="row align-items-center">
-            {/* Single Widget Area */}
-            <div className="col-12 col-lg-4">
-              <div className="single_widget_area">
-                {/* Logo */}
-                <div className="footer-logo mr-50">
-                  {/* <a href="index.html">
-                    <img
-                      src="img/e-library.png"
-                      alt=""
-                      style={{ width: "50%", height: "50%" }}
-                    />
-                  </a> */}
-                </div>
-                {/* Copywrite Text */}
-                <p className="copywrite">
-                  {/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}
-                  Copyright © All rights reserved | This template is made with{" "}
-                  <i className="fa fa-heart-o" aria-hidden="true" /> by{" "}
-                  {/* <a href="https://colorlib.com" target="_blank">
-                    Colorlib */}
-                  {/* </a>{" "} */}
-                  &amp; Re-distributed by{" "}
-                  {/* <a href="https://themewagon.com/" target="_blank">
-                    Themewagon
-                  </a> */}
-                  {/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}
-                </p>
+          {/*Footer Links*/}
+          <div className="footer-top">
+            <div className="row">
+              <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                <h4 className="h4">Quick Shop</h4>
+                <ul>
+                  <li>
+                    <a href="#">Women</a>
+                  </li>
+                  <li>
+                    <a href="#">Men</a>
+                  </li>
+                  <li>
+                    <a href="#">Kids</a>
+                  </li>
+                  <li>
+                    <a href="#">Sportswear</a>
+                  </li>
+                  <li>
+                    <a href="#">Sale</a>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                <h4 className="h4">Informations</h4>
+                <ul>
+                  <li>
+                    <a href="#">About us</a>
+                  </li>
+                  <li>
+                    <a href="#">Careers</a>
+                  </li>
+                  <li>
+                    <a href="#">Privacy policy</a>
+                  </li>
+                  <li>
+                    <a href="#">Terms &amp; condition</a>
+                  </li>
+                  <li>
+                    <a href="#">My Account</a>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                <h4 className="h4">Customer Services</h4>
+                <ul>
+                  <li>
+                    <a href="#">Request Personal Data</a>
+                  </li>
+                  <li>
+                    <a href="#">FAQ's</a>
+                  </li>
+                  <li>
+                    <a href="#">Contact Us</a>
+                  </li>
+                  <li>
+                    <a href="#">Orders and Returns</a>
+                  </li>
+                  <li>
+                    <a href="#">Support Center</a>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
+                <h4 className="h4">Contact Us</h4>
+                <ul className="addressFooter">
+                  <li>
+                    <i className="icon anm anm-map-marker-al" />
+                    <p>
+                      55 Gallaxy Enque,
+                      <br />
+                      2568 steet, 23568 NY
+                    </p>
+                  </li>
+                  <li className="phone">
+                    <i className="icon anm anm-phone-s" />
+                    <p>(440) 000 000 0000</p>
+                  </li>
+                  <li className="email">
+                    <i className="icon anm anm-envelope-l" />
+                    <p>sales@yousite.com</p>
+                  </li>
+                </ul>
               </div>
             </div>
-            {/* Single Widget Area */}
+          </div>
+          {/*End Footer Links*/}
+          <hr />
+          <div className="footer-bottom">
+            <div className="row">
+              {/*Footer Copyright*/}
+              <div className="col-12 col-sm-12 col-md-12 col-lg-12 order-1 order-md-0 order-lg-0 order-sm-1 copyright text-center">
+                <span /> <a href="templateshub.net">Templates Hub</a>
+              </div>
+              {/*End Footer Copyright*/}
+            </div>
           </div>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
   );
 };

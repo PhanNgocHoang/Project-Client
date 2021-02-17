@@ -27,57 +27,104 @@ export const Categories = () => {
     getPublisher();
   }, []);
   return (
-    <div className="shop_sidebar_area">
-      <div className="widget catagory mb-50">
-        <h6 className="widget-title mb-30">Catagories</h6>
-        <div className="catagories-menu">
-          <ul>
-            {bookTypes.map((item) => (
-              <li key={item._id} className="mt-4">
-                {item.type_name}
-              </li>
-            ))}
-          </ul>
+    <div>
+      <div className="sidebar_widget filterBox filter-widget">
+        <div className="widget-title">
+          <h2>Book Types</h2>
         </div>
-      </div>
-      <div className="widget brands mb-50">
-        {/* Widget Title */}
-        <h6 className="widget-title mb-30">Authors</h6>
-        <div className="widget-desc">
-          {authors.map((item) => (
-            <div className="form-check">
+        <ul>
+          {bookTypes.map((item) => (
+            <li key={item._id}>
               <input
-                className="form-check-input"
                 type="checkbox"
-                defaultValue
-                key={item._id}
+                defaultValue="allen-vela"
+                value={item._id}
               />
-              <label className="form-check-label" htmlFor="amado">
+              <label>
+                <span>
+                  <span />
+                </span>
+                {item.type_name}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="sidebar_widget filterBox filter-widget">
+        <div className="widget-title">
+          <h2>Authors</h2>
+        </div>
+        <ul>
+          {authors.map((item) => (
+            <li key={item._id}>
+              <input
+                type="checkbox"
+                defaultValue="allen-vela"
+                value={item._id}
+              />
+              <label>
+                <span>
+                  <span />
+                </span>
                 {item.authorName}
               </label>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
-      {/* ##### Single Widget ##### */}
-      <div className="widget color mb-50">
-        {/* Widget Title */}
-        <h6 className="widget-title mb-30">Publisher</h6>
-        <div className="widget-desc">
+      <div className="sidebar_widget filterBox filter-widget">
+        <div className="widget-title">
+          <h2>Publishers</h2>
+        </div>
+        <ul>
           {publishers.map((item) => (
-            <div className="form-check">
+            <li key={item._id}>
               <input
-                className="form-check-input"
                 type="checkbox"
-                defaultValue
-                key={item._id}
+                defaultValue="allen-vela"
+                value={item._id}
               />
-              <label className="form-check-label" htmlFor="amado">
+              <label>
+                <span>
+                  <span />
+                </span>
                 {item.publisherName}
               </label>
-            </div>
+            </li>
           ))}
+        </ul>
+      </div>
+
+      <div className="sidebar_widget filterBox filter-widget">
+        <div className="widget-title">
+          <h2>Price</h2>
         </div>
+        <form action="#" method="post" className="price-filter">
+          <div
+            id="slider-range"
+            className="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+          >
+            <div className="ui-slider-range ui-widget-header ui-corner-all" />
+            <span
+              className="ui-slider-handle ui-state-default ui-corner-all"
+              tabIndex={0}
+            />
+            <span
+              className="ui-slider-handle ui-state-default ui-corner-all"
+              tabIndex={0}
+            />
+          </div>
+          <div className="row">
+            <div className="col-6">
+              <p className="no-margin">
+                <input id="amount" type="text" />
+              </p>
+            </div>
+            <div className="col-6 text-right margin-25px-top">
+              <button className="btn btn-secondary btn--small">filter</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );
