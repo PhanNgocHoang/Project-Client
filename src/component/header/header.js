@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Modal, Button, Form, Col, CardGroup } from "react-bootstrap";
 import { Formik } from "formik";
@@ -92,12 +92,12 @@ export const Header = () => {
           <div className="row align-items-center">
             {/*Desktop Logo*/}
             <div className="logo col-md-2 col-lg-2 d-none d-lg-block">
-              <Link to="/">
+              <NavLink to="/">
                 <img
                   src="images/logo/e-library.png"
                   style={{ width: "30%", height: "30%" }}
                 />
-              </Link>
+              </NavLink>
             </div>
             {/*End Desktop Logo*/}
             <div className="col-2 col-sm-3 col-md-3 col-lg-8">
@@ -115,10 +115,10 @@ export const Header = () => {
                 {/* for mobile */}
                 <ul id="siteNav" className="site-nav medium center hidearrow">
                   <li className="lvl1 parent megamenu">
-                    <Link to="/">Home</Link>
+                    <NavLink to="/">Home</NavLink>
                   </li>
                   <li className="lvl1 parent megamenu">
-                    <Link to="/library">Library</Link>
+                    <NavLink to="/library">Library</NavLink>
                   </li>
                   <li className="lvl1 parent megamenu">
                     <a href="#">Favorite</a>

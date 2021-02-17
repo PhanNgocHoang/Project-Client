@@ -8,8 +8,8 @@ export const RouterComponent = () => {
   return (
     <Switch>
       <Route path="/books/:book_id" component={BookDetails} />
-      <Route path="/library" exact component={Library} />
-      <Route path="/" exact component={Home} />
+      <Route path="/library" component={Library} />
+      <Route path="/" component={Home} />
     </Switch>
   );
 };

@@ -36,71 +36,72 @@ export const Books = (props) => {
         ? newBooks.map((item) => (
             <div className={props.position} key={item._id}>
               {/* start product image */}
-              <div className="product-image">
-                {/* start product image */}
-                <a
-                  href="product-layout-1.html"
-                  className="grid-view-item__link"
-                >
-                  {item.images.map((image) => (
+              <NavLink to={`books/${item._id}`}>
+                <div className="product-image">
+                  {/* start product image */}
+                  <a
+                    href="product-layout-1.html"
+                    className="grid-view-item__link"
+                  >
                     <img
-                      key={image.cloudinary_id}
                       className="primary blur-up lazyload"
-                      data-src={image.url}
+                      data-src={item.images.url}
                       src="assets/images/product-images/product-image1.jpg"
                       alt="image"
                       title={item.description}
                     />
-                  ))}
-                </a>
-                <form
-                  className="variants add"
-                  action="#"
-                  onclick="window.location.href='cart.html'"
-                  method="post"
-                >
-                  <button
-                    className="btn btn-addto-cart"
-                    type="button"
-                    tabIndex={0}
+                  </a>
+                  <form
+                    className="variants add"
+                    action="#"
+                    onclick="window.location.href='cart.html'"
+                    method="post"
                   >
-                    Add To Cart
-                  </button>
-                </form>
-                <div className="button-set">
-                  <div className="wishlist-btn">
-                    <a
-                      className="wishlist add-to-wishlist"
-                      href="wishlist.html"
+                    <button
+                      className="btn btn-addto-cart"
+                      type="button"
+                      tabIndex={0}
                     >
-                      <i className="icon anm anm-heart-l" />
-                    </a>
+                      Add To Cart
+                    </button>
+                  </form>
+                  <div className="button-set">
+                    <div className="wishlist-btn">
+                      <a
+                        className="wishlist add-to-wishlist"
+                        href="wishlist.html"
+                      >
+                        <i className="icon anm anm-heart-l" />
+                      </a>
+                    </div>
+                  </div>
+                  {/* end product button */}
+                </div>
+                {/* end product image */}
+                {/*start product details */}
+                <div className="product-details text-center">
+                  {/* product name */}
+                  <div className="product-name">
+                    <a href="product-layout-1.html">{item.book_name}</a>
+                  </div>
+                  <div className="product-price">
+                    {item.authors.map((author) => (
+                      <span key={author._id} className="price">
+                        {" "}
+                        {author.authorName}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="product-price">
+                    <span className="price">
+                      {item.publisher.publisherName}
+                    </span>
+                  </div>
+                  <div className="product-price">
+                    <span className="price">${item.price}</span>
                   </div>
                 </div>
-                {/* end product button */}
-              </div>
-              {/* end product image */}
-              {/*start product details */}
-              <div className="product-details text-center">
-                {/* product name */}
-                <div className="product-name">
-                  <a href="product-layout-1.html">{item.book_name}</a>
-                </div>
-                <div className="product-price">
-                  {item.authors.map((author) => (
-                    <span key={author._id} className="price">
-                      {" "}
-                      {author.authorName}
-                    </span>
-                  ))}
-                </div>
-                <div className="product-price">
-                  <span className="price">{item.publisher.publisherName}</span>
-                </div>
-                <div className="product-price">
-                  <span className="price">${item.price}</span>
-                </div>
-              </div>
+              </NavLink>
             </div>
           ))
         : null}

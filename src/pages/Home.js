@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Books } from "../component/book/listBook";
 import { useAuth } from "../hooks/useAuth";
-import { Bestseller } from "../component/book/bestbook";
 import { Slider } from "../component/header/slide";
 
 export const Home = () => {
@@ -17,7 +16,6 @@ export const Home = () => {
   return (
     <div>
       <Slider />
-      <Bestseller />
       <div className="product-rows section">
         <div className="container">
           <div className="row">
