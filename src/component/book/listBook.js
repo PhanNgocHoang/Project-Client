@@ -30,6 +30,8 @@ export const Books = (props) => {
   const newBooks = useSelector((state) => {
     return state.newBooks.data;
   });
+  console.log(newBooks);
+
   return (
     <div className="row">
       {newBooks !== {}
@@ -44,27 +46,21 @@ export const Books = (props) => {
                     className="grid-view-item__link"
                   >
                     <img
-                      className="primary blur-up lazyload"
-                      data-src={item.images.url}
-                      src="assets/images/product-images/product-image1.jpg"
+                      className="lazyload"
+                      data-src={item.images}
+                      src={item.images}
                       alt="image"
                       title={item.description}
                     />
                   </a>
-                  <form
-                    className="variants add"
-                    action="#"
-                    onclick="window.location.href='cart.html'"
-                    method="post"
+                  <button
+                    className="btn btn-addto-cart"
+                    type="button"
+                    style={{ marginTop: 3 }}
+                    tabIndex={0}
                   >
-                    <button
-                      className="btn btn-addto-cart"
-                      type="button"
-                      tabIndex={0}
-                    >
-                      Add To Cart
-                    </button>
-                  </form>
+                    Add To Cart
+                  </button>
                   <div className="button-set">
                     <div className="wishlist-btn">
                       <a
@@ -98,7 +94,7 @@ export const Books = (props) => {
                     </span>
                   </div>
                   <div className="product-price">
-                    <span className="price">${item.price}</span>
+                    <span className="price">{item.price} eCoins/day</span>
                   </div>
                 </div>
               </NavLink>

@@ -4,13 +4,11 @@ import { getBookDetails } from "../../api/index";
 export const BookDetails = (props) => {
   const bookId = props.match.params.book_id;
   const [bookDetail, setBookDetail] = useState({});
-  const [bookImages, setBookImages] = useState({});
   const [authors, setAuthors] = useState([]);
   const [publisher, setPublisher] = useState({});
   const getBook = async (bookId) => {
     const book = await getBookDetails(bookId);
     setBookDetail(book.data.data);
-    setBookImages(book.data.data.images);
     setAuthors(book.data.data.authors);
     setPublisher(book.data.data.publisher);
   };
@@ -43,7 +41,7 @@ export const BookDetails = (props) => {
                     <img
                       className="blur-up lazyload zoompro"
                       alt=""
-                      src={bookImages.url}
+                      src={bookDetail.images ? bookDetail.images : null}
                     />
                   </div>
                 </div>
@@ -62,11 +60,13 @@ export const BookDetails = (props) => {
                 <div className="prInfoRow">
                   <div className="product-stock">
                     Author:
-                    {authors.map((item) => (
-                      <span style={{ marginLeft: 3 }} className="instock">
-                        {item.authorName}
-                      </span>
-                    ))}
+                    {bookDetail.authors
+                      ? authors.map((item) => (
+                          <span style={{ marginLeft: 3 }} className="instock">
+                            {item.authorName}
+                          </span>
+                        ))
+                      : null}
                   </div>
                   <div className="product-sku">
                     Publisher:{" "}
@@ -132,7 +132,9 @@ export const BookDetails = (props) => {
                   </h3>
                   <div id="tab1" className="tab-content">
                     <div className="product-description rte">
-                      <p>{bookDetail.description}</p>
+                      <p>
+                        {bookDetail.description ? bookDetail.description : null}
+                      </p>
                     </div>
                   </div>
                   <h3 className="acor-ttl" rel="tab2">
@@ -484,7 +486,7 @@ export const BookDetails = (props) => {
                       </tbody>
                     </table>
                     <div className="text-center">
-                      <img src={bookImages.url} alt="" />
+                      <img src={bookDetail.images} alt="" />
                     </div>
                   </div>
                   <h3 className="acor-ttl" rel="tab4">

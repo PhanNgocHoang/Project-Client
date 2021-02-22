@@ -94,7 +94,7 @@ export const Header = () => {
             <div className="logo col-md-2 col-lg-2 d-none d-lg-block">
               <NavLink to="/">
                 <img
-                  src="images/logo/e-library.png"
+                  src="https://res.cloudinary.com/dps6fac1c/image/upload/v1613621648/images/e-library_uxmixc.png"
                   style={{ width: "30%", height: "30%" }}
                 />
               </NavLink>
@@ -127,13 +127,13 @@ export const Header = () => {
                     className="lvl1 parent megamenu"
                     style={{ cursor: "pointer" }}
                   >
-                    <a onClick={() => setSigInScreen(true)}>Login</a>
+                    <a onClick={() => setSigInScreen(true)}>Sign In</a>
                   </li>
                   <li
                     className="lvl1 parent megamenu"
                     style={{ cursor: "pointer" }}
                   >
-                    <a onClick={() => setSigUpScreen(true)}>Register</a>
+                    <a onClick={() => setSigUpScreen(true)}>Sign Up</a>
                   </li>
                 </ul>
               </nav>
