@@ -4,8 +4,7 @@ import {
   getAllAuthor,
   getAllPublisher,
 } from "../../api/index";
-
-export const Categories = () => {
+export const Categories = (props) => {
   const [bookTypes, setBookTypes] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publishers, setPublishers] = useState([]);
@@ -39,6 +38,17 @@ export const Categories = () => {
                 type="checkbox"
                 defaultValue="allen-vela"
                 value={item._id}
+                onChange={(e) => {
+                  const value = e.target.checked ? item._id : null;
+                  if (value === null) {
+                    const bookType = props.pagination.bookType;
+                    props.pagination.bookType = bookType.filter(
+                      (item) => item !== item._id
+                    );
+                  } else {
+                    props.pagination.bookType.push(item._id);
+                  }
+                }}
               />
               <label>
                 <span>
@@ -61,6 +71,17 @@ export const Categories = () => {
                 type="checkbox"
                 defaultValue="allen-vela"
                 value={item._id}
+                onChange={(e) => {
+                  const value = e.target.checked ? item._id : null;
+                  if (value === null) {
+                    const author = props.pagination.authors;
+                    props.pagination.filter.authors = author.filter(
+                      (item) => item !== item._id
+                    );
+                  } else {
+                    props.pagination.authors.push(item._id);
+                  }
+                }}
               />
               <label>
                 <span>
@@ -83,6 +104,17 @@ export const Categories = () => {
                 type="checkbox"
                 defaultValue="allen-vela"
                 value={item._id}
+                onChange={(e) => {
+                  const value = e.target.checked ? item._id : null;
+                  if (value === null) {
+                    const publishers = props.pagination.publisher;
+                    props.pagination.filter.publisher = publishers.filter(
+                      (item) => item !== item._id
+                    );
+                  } else {
+                    props.pagination.publisher.push(item._id);
+                  }
+                }}
               />
               <label>
                 <span>
@@ -93,38 +125,6 @@ export const Categories = () => {
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="sidebar_widget filterBox filter-widget">
-        <div className="widget-title">
-          <h2>Price</h2>
-        </div>
-        <form action="#" method="post" className="price-filter">
-          <div
-            id="slider-range"
-            className="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-          >
-            <div className="ui-slider-range ui-widget-header ui-corner-all" />
-            <span
-              className="ui-slider-handle ui-state-default ui-corner-all"
-              tabIndex={0}
-            />
-            <span
-              className="ui-slider-handle ui-state-default ui-corner-all"
-              tabIndex={0}
-            />
-          </div>
-          <div className="row">
-            <div className="col-6">
-              <p className="no-margin">
-                <input id="amount" type="text" />
-              </p>
-            </div>
-            <div className="col-6 text-right margin-25px-top">
-              <button className="btn btn-secondary btn--small">filter</button>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   );

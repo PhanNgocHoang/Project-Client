@@ -18,7 +18,7 @@ export const Slider = () => {
           <Carousel.Item interval={2000}>
             <img
               className="d-block w-100"
-              src="https://educationaltrainingcompany.com/wp-content/uploads/2019/04/Distance-Education0.jpg"
+              src="https://res.cloudinary.com/dps6fac1c/image/upload/v1614091566/images/Distance-Education0_xvdava.jpg"
             />
             <Carousel.Caption>
               <div className="container">

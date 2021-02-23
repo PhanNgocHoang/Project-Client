@@ -1,11 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Categories } from "../component/category/category";
 import { Books } from "../component/book/listBook";
+import { getAllBookTypes, getAllAuthor, getAllPublisher } from "../api/index";
+import { Form } from "react-bootstrap";
+
 export const Library = () => {
+  let filter = {
+    publisher: [],
+    bookType: [],
+    authors: [],
+  };
+  const [bookTypes, setBookTypes] = useState([]);
+  const [authors, setAuthors] = useState([]);
+  const [publishers, setPublishers] = useState([]);
+  const getBookTypes = async () => {
+    const result = await getAllBookTypes();
+    setBookTypes(result.data.data);
+  };
+  const getAuthors = async () => {
+    const result = await getAllAuthor();
+    setAuthors(result.data.data);
+  };
+  const getPublisher = async () => {
+    const result = await getAllPublisher();
+    setPublishers(result.data.data);
+  };
+  useEffect(() => {
+    getBookTypes();
+    getAuthors();
+    getPublisher();
+  }, []);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
     searchKey: "",
+    publisher: [],
+    bookType: [],
+    authors: [],
   });
   const loadMore = () => {
     setPagination({ ...pagination, limit: pagination.limit + 4 });
@@ -37,7 +68,129 @@ export const Library = () => {
               <i className="icon icon anm anm-times-l" />
             </div>
             <div className="sidebar_tags">
-              <Categories />
+              <div className="sidebar_widget filterBox filter-widget">
+                <Form>
+                  <div className="widget-title">
+                    <h2>Book Types</h2>
+                  </div>
+                  <ul>
+                    {bookTypes.map((item) => (
+                      <li key={item._id}>
+                        <input
+                          type="checkbox"
+                          defaultValue="allen-vela"
+                          value={item._id}
+                          onChange={(e) => {
+                            const value = e.target.checked ? item._id : null;
+                            if (value === null) {
+                              const bookType = filter.bookType;
+                              bookType.filter((item) => item !== item._id);
+                              setPagination({
+                                ...pagination,
+                                bookType: filter.bookType,
+                              });
+                            } else {
+                              filter.bookType.push(value);
+
+                              setPagination({
+                                ...pagination,
+                                bookType: filter.bookType,
+                              });
+                            }
+                          }}
+                        />
+                        <label>
+                          <span>
+                            <span />
+                          </span>
+                          {item.type_name}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </Form>
+              </div>
+
+              <div className="sidebar_widget filterBox filter-widget">
+                <div className="widget-title">
+                  <h2>Authors</h2>
+                </div>
+                <ul>
+                  {authors.map((item) => (
+                    <li key={item._id}>
+                      <input
+                        type="checkbox"
+                        defaultValue="allen-vela"
+                        value={item._id}
+                        onChange={(e) => {
+                          const value = e.target.checked ? item._id : null;
+                          if (value === null) {
+                            const bookType = filter.authors;
+                            bookType.filter((item) => item !== item._id);
+                            setPagination({
+                              ...pagination,
+                              authors: filter.authors,
+                            });
+                          } else {
+                            filter.authors.push(value);
+
+                            setPagination({
+                              ...pagination,
+                              authors: filter.authors,
+                            });
+                          }
+                        }}
+                      />
+                      <label>
+                        <span>
+                          <span />
+                        </span>
+                        {item.authorName}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="sidebar_widget filterBox filter-widget">
+                <div className="widget-title">
+                  <h2>Publishers</h2>
+                </div>
+                <ul>
+                  {publishers.map((item) => (
+                    <li key={item._id}>
+                      <input
+                        type="checkbox"
+                        defaultValue="allen-vela"
+                        value={item._id}
+                        onChange={(e) => {
+                          const value = e.target.checked ? item._id : null;
+                          if (value === null) {
+                            const bookType = filter.publisher;
+                            bookType.filter((item) => item !== item._id);
+                            setPagination({
+                              ...pagination,
+                              bookType: filter.publisher,
+                            });
+                          } else {
+                            filter.publisher.push(value);
+
+                            setPagination({
+                              ...pagination,
+                              bookType: filter.publisher,
+                            });
+                          }
+                        }}
+                      />
+                      <label>
+                        <span>
+                          <span />
+                        </span>
+                        {item.publisherName}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
           <div className="col-12 col-sm-12 col-md-9 col-lg-9 main-col">

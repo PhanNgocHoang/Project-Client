@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Modal, Button, Form, Col, CardGroup } from "react-bootstrap";
+import {
+  Modal,
+  Button,
+  Form,
+  Col,
+  CardGroup,
+  OverlayTrigger,
+  Popover,
+  ListGroup,
+} from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
 import Alert from "react-s-alert";
@@ -100,7 +109,7 @@ export const Header = () => {
               </NavLink>
             </div>
             {/*End Desktop Logo*/}
-            <div className="col-2 col-sm-3 col-md-3 col-lg-8">
+            <div className="col-2 col-sm-2 col-md-3 col-lg-7">
               <div className="d-block d-lg-none">
                 <button
                   type="button"
@@ -123,35 +132,75 @@ export const Header = () => {
                   <li className="lvl1 parent megamenu">
                     <a href="#">Favorite</a>
                   </li>
-                  <li
-                    className="lvl1 parent megamenu"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <a onClick={() => setSigInScreen(true)}>Sign In</a>
-                  </li>
-                  <li
-                    className="lvl1 parent megamenu"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <a onClick={() => setSigUpScreen(true)}>Sign Up</a>
-                  </li>
+
+                  {user ? (
+                    <li>
+                      <OverlayTrigger
+                        placement="bottom"
+                        trigger="click"
+                        overlay={
+                          <Popover>
+                            <Popover.Title as="h3">
+                              {user.displayName}
+                            </Popover.Title>
+                            <Popover.Content>
+                              <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                  <NavLink to="/me">Update Profile</NavLink>
+                                </ListGroup.Item>
+                                <ListGroup.Item>My Book</ListGroup.Item>
+                                <ListGroup.Item>
+                                  Borrowing history
+                                </ListGroup.Item>
+                                <ListGroup.Item>LogOut</ListGroup.Item>
+                              </ListGroup>
+                            </Popover.Content>
+                          </Popover>
+                        }
+                      >
+                        <div>
+                          <img
+                            src={user.photoUrl}
+                            alt=""
+                            className="border rounded-circle"
+                            style={{ width: 35, marginLeft: "3%" }}
+                          />
+                        </div>
+                      </OverlayTrigger>
+                    </li>
+                  ) : (
+                    <li
+                      className="lvl1 parent megamenu"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <a onClick={() => setSigInScreen(true)}>Sign In</a>
+                    </li>
+                  )}
+                  {user ? null : (
+                    <li
+                      className="lvl1 parent megamenu"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <a onClick={() => setSigUpScreen(true)}>Sign Up</a>
+                    </li>
+                  )}
                 </ul>
               </nav>
               {/*End Desktop Menu*/}
             </div>
             {/*Mobile Logo*/}
-            <div className="col-6 col-sm-6 col-md-6 col-lg-2 d-block d-lg-none mobile-logo">
+            <div className="col-6 col-sm-6 col-md-5 col-lg-1 d-block d-lg-none mobile-logo">
               <div className="logo">
                 <a href="index.html">
                   <img
-                    src="images/logo/e-library.png"
+                    src="https://res.cloudinary.com/dps6fac1c/image/upload/v1613621648/images/e-library_uxmixc.png"
                     style={{ width: "50%", height: "50%" }}
                   />
                 </a>
               </div>
             </div>
             {/*Mobile Logo*/}
-            <div className="col-4 col-sm-3 col-md-3 col-lg-2">
+            <div className="col-4 col-sm-4 col-md-4 col-lg-3">
               <div className="site-cart">
                 <a href="#" className="site-header__cart" title="Cart">
                   <i className="icon anm anm-bag-l" />
@@ -318,20 +367,56 @@ export const Header = () => {
           <i className="icon anm anm-times-l pull-right" /> Close Menu
         </div>
         <ul id="MobileNav" className="mobile-nav">
+          {user ? (
+            <li>
+              <OverlayTrigger
+                placement="auto"
+                trigger="click"
+                overlay={
+                  <Popover>
+                    <Popover.Title as="h3">{user.displayName}</Popover.Title>
+                    <Popover.Content>
+                      <ListGroup variant="flush">
+                        <ListGroup.Item>
+                          <NavLink to="/me">Update Profile</NavLink>
+                        </ListGroup.Item>
+                        <ListGroup.Item>My Book</ListGroup.Item>
+                        <ListGroup.Item>Borrowing history</ListGroup.Item>
+                        <ListGroup.Item>LogOut</ListGroup.Item>
+                      </ListGroup>
+                    </Popover.Content>
+                  </Popover>
+                }
+              >
+                <div>
+                  <img
+                    src={user.photoUrl}
+                    alt=""
+                    className="border rounded-circle"
+                    style={{ width: 35, marginLeft: "3%" }}
+                  />
+                  <span style={{ marginLeft: 5 }}>{user.displayName}</span>
+                </div>
+              </OverlayTrigger>
+            </li>
+          ) : (
+            <li className="lvl1 parent megamenu">
+              <a onClick={() => setSigInScreen(true)}>Login</a>
+            </li>
+          )}
+          {user ? null : (
+            <li className="lvl1 parent megamenu">
+              <a href="about-us.html">Register</a>
+            </li>
+          )}
           <li className="lvl1 parent megamenu">
             <a href="home2-default.html">Home</a>
           </li>
           <li className="lvl1 parent megamenu">
-            <a href="#">Shop</a>
+            <a href="#">Library</a>
           </li>
           <li className="lvl1 parent megamenu">
-            <a href="product-layout-1.html">Product </a>
-          </li>
-          <li className="lvl1 parent megamenu">
-            <a onClick={() => setSigInScreen(true)}>Login</a>
-          </li>
-          <li className="lvl1 parent megamenu">
-            <a href="about-us.html">Register</a>
+            <a href="product-layout-1.html">Favorite</a>
           </li>
         </ul>
       </div>

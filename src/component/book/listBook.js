@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import * as types from "../../constants/index";
 import { NavLink } from "react-router-dom";
 export const Books = (props) => {
+  console.log(props.pagination);
+
   const dispatch = useDispatch();
   const getData = async () => {
     try {
@@ -15,6 +17,7 @@ export const Books = (props) => {
       const result = await getBook(paramsString);
       if (result.status === 200) {
         dispatch({ type: types.NEW_BOOKS, payload: result.data.data.data });
+        console.log(result);
       }
     } catch (error) {
       return Alert.error(`<div role="alert">Can Not Get New Book</div>`, {
@@ -30,8 +33,6 @@ export const Books = (props) => {
   const newBooks = useSelector((state) => {
     return state.newBooks.data;
   });
-  console.log(newBooks);
-
   return (
     <div className="row">
       {newBooks !== {}
