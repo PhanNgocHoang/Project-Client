@@ -1,12 +1,12 @@
 import React from "react";
-import { Carousel } from "react-bootstrap";
+import { Carousel, Image } from "react-bootstrap";
 export const Slider = () => {
   return (
     <div className="slideshow slideshow-wrapper pb-section">
       <div className="home-slideshow">
         <Carousel>
           <Carousel.Item interval={2000}>
-            <img
+            <Image
               style={{ height: "100%" }}
               className="d-block w-100"
               src="https://eknathmadhavicollege.in/wp-content/uploads/2020/07/library-shelves-banner-photo.jpg"
@@ -16,7 +16,7 @@ export const Slider = () => {
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item interval={2000}>
-            <img
+            <Image
               className="d-block w-100"
               src="https://res.cloudinary.com/dps6fac1c/image/upload/v1614091566/images/Distance-Education0_xvdava.jpg"
             />

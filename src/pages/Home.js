@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Books } from "../component/book/listBook";
-import { useAuth } from "../hooks/useAuth";
 import { Slider } from "../component/header/slide";
 
 export const Home = () => {
@@ -9,7 +8,6 @@ export const Home = () => {
     limit: 4,
     searchKey: "",
   });
-  useAuth();
   const loadMore = () => {
     setPagination({ ...pagination, limit: pagination.limit + 4 });
   };

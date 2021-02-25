@@ -10,61 +10,31 @@ export const Footer = () => {
               <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
                 <h4 className="h4">Quick Shop</h4>
                 <ul>
-                  <li>
-                    <a href="#">Women</a>
-                  </li>
-                  <li>
-                    <a href="#">Men</a>
-                  </li>
-                  <li>
-                    <a href="#">Kids</a>
-                  </li>
-                  <li>
-                    <a href="#">Sportswear</a>
-                  </li>
-                  <li>
-                    <a href="#">Sale</a>
-                  </li>
+                  <li>Women</li>
+                  <li>Men</li>
+                  <li>Kids</li>
+                  <li>Sportswear</li>
+                  <li>Sale</li>
                 </ul>
               </div>
               <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
                 <h4 className="h4">Informations</h4>
                 <ul>
-                  <li>
-                    <a href="#">About us</a>
-                  </li>
-                  <li>
-                    <a href="#">Careers</a>
-                  </li>
-                  <li>
-                    <a href="#">Privacy policy</a>
-                  </li>
-                  <li>
-                    <a href="#">Terms &amp; condition</a>
-                  </li>
-                  <li>
-                    <a href="#">My Account</a>
-                  </li>
+                  <li>About us</li>
+                  <li>Careers</li>
+                  <li>Privacy policy</li>
+                  <li>Terms &amp; condition</li>
+                  <li>My Account</li>
                 </ul>
               </div>
               <div className="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
                 <h4 className="h4">Customer Services</h4>
                 <ul>
-                  <li>
-                    <a href="#">Request Personal Data</a>
-                  </li>
-                  <li>
-                    <a href="#">FAQ's</a>
-                  </li>
-                  <li>
-                    <a href="#">Contact Us</a>
-                  </li>
-                  <li>
-                    <a href="#">Orders and Returns</a>
-                  </li>
-                  <li>
-                    <a href="#">Support Center</a>
-                  </li>
+                  <li>Request Personal Data</li>
+                  <li>FAQ's</li>
+                  <li>Contact Us</li>
+                  <li>Orders and Returns</li>
+                  <li>Support Center</li>
                 </ul>
               </div>
               <div className="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
@@ -96,7 +66,7 @@ export const Footer = () => {
             <div className="row">
               {/*Footer Copyright*/}
               <div className="col-12 col-sm-12 col-md-12 col-lg-12 order-1 order-md-0 order-lg-0 order-sm-1 copyright text-center">
-                <span /> <a href="templateshub.net">Templates Hub</a>
+                <span /> Templates Hub
               </div>
               {/*End Footer Copyright*/}
             </div>

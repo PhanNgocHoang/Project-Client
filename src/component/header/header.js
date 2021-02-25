@@ -10,6 +10,7 @@ import {
   OverlayTrigger,
   Popover,
   ListGroup,
+  Image,
 } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -25,7 +26,9 @@ import {
   urlSignInWithFacebook,
   checkLogin,
   uploadAvatar,
+  register,
 } from "../../api/index.js";
+import { useAuth } from "../../hooks/useAuth";
 const validationSchema = yup.object().shape({
   email: yup.string().email("Email invalid").required("Email is required"),
   password: yup
@@ -35,6 +38,7 @@ const validationSchema = yup.object().shape({
 });
 const validationSchemaRegister = yup.object().shape({
   email: yup.string().email("Email invalid").required("Email is required"),
+  name: yup.string().required("Name is required"),
   password: yup
     .string()
     .min(6, "Password is less than 6 characters")
@@ -43,11 +47,12 @@ const validationSchemaRegister = yup.object().shape({
     .string()
     .min(6, "Confirm Password is less than 6 characters")
     .required("Confirm Password is required")
-    .oneOf([yup.ref("password")], "Confirm Password not match"),
+    .oneOf([yup.ref("password")], "Confirm password not match with password"),
   dob: yup.date().required("Day of birth is required"),
-  avatar: yup.string().required("Please choose a avatar"),
+  photoUrl: yup.string().required("Please choose a avatar"),
 });
 export const Header = () => {
+  useAuth();
   const dispatch = useDispatch();
   const initialValues = {
     email: "",
@@ -55,9 +60,11 @@ export const Header = () => {
   };
   const initialValuesRegister = {
     email: "",
+    name: "",
     password: "",
+    // c_password: "",
     dob: "",
-    avatar: "",
+    photoUrl: "",
   };
   const [signInScreen, setSigInScreen] = useState(false);
   const [signUpScreen, setSigUpScreen] = useState(false);
@@ -70,23 +77,17 @@ export const Header = () => {
   const signInWithFacebook = () => {
     return (window.location = urlSignInWithFacebook);
   };
-  const showSignIn = () => {
-    setSigInScreen(true);
-  };
   const closeSignIn = () => {
     setSigInScreen(false);
-  };
-  const showSignUp = async function () {
-    setSigUpScreen(true);
   };
   const closeSignUp = async function () {
     setSigUpScreen(false);
   };
   const uploadMyAvatar = async (file) => {
     const formData = new FormData();
-    formData.append("images", file);
+    formData.append("image", file);
     const result = await uploadAvatar(formData);
-    console.log(result);
+    initialValuesRegister.photoUrl = result.data.url;
   };
   const logOut = async () => {
     localStorage.removeItem("token");
@@ -102,7 +103,7 @@ export const Header = () => {
             {/*Desktop Logo*/}
             <div className="logo col-md-2 col-lg-2 d-none d-lg-block">
               <NavLink to="/">
-                <img
+                <Image
                   src="https://res.cloudinary.com/dps6fac1c/image/upload/v1613621648/images/e-library_uxmixc.png"
                   style={{ width: "30%", height: "30%" }}
                 />
@@ -130,10 +131,9 @@ export const Header = () => {
                     <NavLink to="/library">Library</NavLink>
                   </li>
                   <li className="lvl1 parent megamenu">
-                    <a href="#">Favorite</a>
+                    <NavLink to="/favorite">Favorite</NavLink>
                   </li>
-
-                  {user ? (
+                  {user.email ? (
                     <li>
                       <OverlayTrigger
                         placement="bottom"
@@ -152,7 +152,13 @@ export const Header = () => {
                                 <ListGroup.Item>
                                   Borrowing history
                                 </ListGroup.Item>
-                                <ListGroup.Item>LogOut</ListGroup.Item>
+                                <ListGroup.Item
+                                  onClick={() => {
+                                    logOut();
+                                  }}
+                                >
+                                  LogOut
+                                </ListGroup.Item>
                               </ListGroup>
                             </Popover.Content>
                           </Popover>
@@ -176,7 +182,7 @@ export const Header = () => {
                       <a onClick={() => setSigInScreen(true)}>Sign In</a>
                     </li>
                   )}
-                  {user ? null : (
+                  {user.email ? null : (
                     <li
                       className="lvl1 parent megamenu"
                       style={{ cursor: "pointer" }}
@@ -192,7 +198,7 @@ export const Header = () => {
             <div className="col-6 col-sm-6 col-md-5 col-lg-1 d-block d-lg-none mobile-logo">
               <div className="logo">
                 <a href="index.html">
-                  <img
+                  <Image
                     src="https://res.cloudinary.com/dps6fac1c/image/upload/v1613621648/images/e-library_uxmixc.png"
                     style={{ width: "50%", height: "50%" }}
                   />
@@ -367,7 +373,7 @@ export const Header = () => {
           <i className="icon anm anm-times-l pull-right" /> Close Menu
         </div>
         <ul id="MobileNav" className="mobile-nav">
-          {user ? (
+          {user.email ? (
             <li>
               <OverlayTrigger
                 placement="auto"
@@ -389,7 +395,7 @@ export const Header = () => {
                 }
               >
                 <div>
-                  <img
+                  <Image
                     src={user.photoUrl}
                     alt=""
                     className="border rounded-circle"
@@ -400,23 +406,23 @@ export const Header = () => {
               </OverlayTrigger>
             </li>
           ) : (
-            <li className="lvl1 parent megamenu">
-              <a onClick={() => setSigInScreen(true)}>Login</a>
+            <li className="lvl1 parent megamenu" style={{ cursor: "pointer" }}>
+              <a onClick={() => setSigInScreen(true)}>Sign In</a>
             </li>
           )}
-          {user ? null : (
-            <li className="lvl1 parent megamenu">
-              <a href="about-us.html">Register</a>
+          {user.email ? null : (
+            <li className="lvl1 parent megamenu" style={{ cursor: "pointer" }}>
+              <a onClick={() => setSigUpScreen(true)}>Sign Up</a>
             </li>
           )}
           <li className="lvl1 parent megamenu">
-            <a href="home2-default.html">Home</a>
+            <NavLink to="/">Home</NavLink>
           </li>
           <li className="lvl1 parent megamenu">
-            <a href="#">Library</a>
+            <NavLink to="/library">Library</NavLink>
           </li>
           <li className="lvl1 parent megamenu">
-            <a href="product-layout-1.html">Favorite</a>
+            <NavLink to="/library">Favorite</NavLink>
           </li>
         </ul>
       </div>
@@ -549,39 +555,41 @@ export const Header = () => {
         <Modal.Body>
           <div className="card-body card-block">
             <Formik
-              initialValues={initialValues}
+              initialValues={initialValuesRegister}
               onSubmit={async (values) => {
-                //     try {
-                //       const result = await createPublisher(values);
-                //       if (result.status === 200) {
-                //         handleCloseCreate();
-                //         setReload(!reload);
-                //         return Alert.success(
-                //           `<div role="alert">
-                //                                  ${result.data.message}
-                //                                 </div>`,
-                //           {
-                //             html: true,
-                //             position: "top-right",
-                //             effect: "slide",
-                //           }
-                //         );
-                //       }
-                //     } catch (error) {
-                //       handleCloseCreate();
-                //       return Alert.error(
-                //         `<div role="alert">
-                //                                 ${error.response.data.message}
-                //                                 </div>`,
-                //         {
-                //           html: true,
-                //           position: "top-right",
-                //           effect: "slide",
-                //         }
-                //       );
-                //     }
+                try {
+                  values.role = "USER";
+                  values.displayName = values.name;
+                  const result = await register(values);
+                  if (result.status === 200) {
+                    setSigUpScreen(false);
+                    return Alert.success(
+                      `<div role="alert">
+                                                 ${result.data.message}
+                                                </div>`,
+                      {
+                        html: true,
+                        position: "top-right",
+                        effect: "slide",
+                      }
+                    );
+                  }
+                } catch (error) {
+                  console.log(error);
+
+                  return Alert.error(
+                    `<div role="alert">
+                                                ${error.response.data.message}
+                                                </div>`,
+                    {
+                      html: true,
+                      position: "top-right",
+                      effect: "slide",
+                    }
+                  );
+                }
               }}
-              validationSchema={validationSchema}
+              validationSchema={validationSchemaRegister}
             >
               {(props) => (
                 <Form
@@ -602,12 +610,40 @@ export const Header = () => {
                           className="ml-5"
                           style={{ width: "60%" }}
                           placeholder="Enter your email"
-                          onChange={props.handleChange}
+                          onChange={(event) => {
+                            initialValuesRegister.email = event.target.value;
+                          }}
                           onBlur={props.handleBlur}
                           isInvalid={props.touched.email && props.errors.email}
                         />
                         <Form.Control.Feedback type="invalid">
                           {props.touched.email && props.errors.email}
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Row>
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Row>
+                      <Form.Label column lg={3.5}>
+                        Name
+                      </Form.Label>
+                      <Col>
+                        <Form.Control
+                          lg={4}
+                          type="name"
+                          id="name"
+                          name="name"
+                          className="ml-5"
+                          style={{ width: "60%" }}
+                          placeholder="Enter your name"
+                          onChange={(event) => {
+                            initialValuesRegister.name = event.target.value;
+                          }}
+                          onBlur={props.handleBlur}
+                          isInvalid={props.touched.name && props.errors.name}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {props.touched.name && props.errors.name}
                         </Form.Control.Feedback>
                       </Col>
                     </Form.Row>
@@ -626,7 +662,9 @@ export const Header = () => {
                           className="ml-3"
                           style={{ width: "63%" }}
                           placeholder="Enter your password"
-                          onChange={props.handleChange}
+                          onChange={(event) => {
+                            initialValuesRegister.password = event.target.value;
+                          }}
                           onBlur={props.handleBlur}
                           isInvalid={
                             props.touched.password && props.errors.password
@@ -651,7 +689,10 @@ export const Header = () => {
                           name="c_password"
                           style={{ width: "63%" }}
                           placeholder="Enter confirm password"
-                          onChange={props.handleChange}
+                          onChange={(event) => {
+                            initialValuesRegister.c_password =
+                              event.target.value;
+                          }}
                           onBlur={props.handleBlur}
                           isInvalid={
                             props.touched.c_password && props.errors.c_password
@@ -677,7 +718,9 @@ export const Header = () => {
                           className="ml-3"
                           style={{ width: "63%" }}
                           placeholder="Enter your day of birth"
-                          onChange={props.handleChange}
+                          onChange={(event) => {
+                            initialValuesRegister.dob = event.target.value;
+                          }}
                           onBlur={props.handleBlur}
                           isInvalid={props.touched.dob && props.errors.dob}
                         />
@@ -690,8 +733,8 @@ export const Header = () => {
                   <Form.Group>
                     <Form.Label>Avatar</Form.Label>
                     <Form.File
-                      id="images"
-                      name="images"
+                      id="photoUrl"
+                      name="photoUrl"
                       accept="image/png, image/jpeg"
                       onChange={(e) => {
                         uploadMyAvatar(e.target.files[0]);

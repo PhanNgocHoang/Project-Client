@@ -19,6 +19,9 @@ const upload = axios.create({
 export const checkLogin = async function (params) {
   return await instance.post("/auth/login", params);
 };
+export const register = async function (params) {
+  return await instance.post("/auth/register", params);
+};
 export const getAllBookTypes = async function () {
   return await instance.get("/typebook/getAll");
 };
@@ -39,6 +42,15 @@ export const getBook = async function (params) {
 };
 export const getBookDetails = async function (params) {
   return await instance.get(`/books/${params}`);
+};
+export const createReview = async function (params) {
+  return await instance.post("/review/create", params);
+};
+export const getReview = async function (params, pagination) {
+  return await instance.get(`/review/${params}?${pagination}`);
+};
+export const FavoriteBook = async function (params) {
+  return await instance.post("book//favorite", params);
 };
 export const urlSignInWithGoogle =
   "https://e-libraryapi.herokuapp.com/auth/google";

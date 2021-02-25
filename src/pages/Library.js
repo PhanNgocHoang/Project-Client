@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Categories } from "../component/category/category";
 import { Books } from "../component/book/listBook";
 import { getAllBookTypes, getAllAuthor, getAllPublisher } from "../api/index";
 import { Form } from "react-bootstrap";

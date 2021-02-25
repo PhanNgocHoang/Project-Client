@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Alert from "react-s-alert";
 import queryString from "query-string";
 import { getBook } from "../../api/index";
@@ -7,9 +7,8 @@ import "react-s-alert/dist/s-alert-css-effects/slide.css";
 import { useDispatch, useSelector } from "react-redux";
 import * as types from "../../constants/index";
 import { NavLink } from "react-router-dom";
+import { Image } from "react-bootstrap";
 export const Books = (props) => {
-  console.log(props.pagination);
-
   const dispatch = useDispatch();
   const getData = async () => {
     try {
@@ -17,7 +16,6 @@ export const Books = (props) => {
       const result = await getBook(paramsString);
       if (result.status === 200) {
         dispatch({ type: types.NEW_BOOKS, payload: result.data.data.data });
-        console.log(result);
       }
     } catch (error) {
       return Alert.error(`<div role="alert">Can Not Get New Book</div>`, {
@@ -42,18 +40,15 @@ export const Books = (props) => {
               <NavLink to={`books/${item._id}`}>
                 <div className="product-image">
                   {/* start product image */}
-                  <a
-                    href="product-layout-1.html"
-                    className="grid-view-item__link"
-                  >
-                    <img
+                  <div className="grid-view-item__link">
+                    <Image
                       className="lazyload"
                       data-src={item.images}
                       src={item.images}
                       alt="image"
                       title={item.description}
                     />
-                  </a>
+                  </div>
                   <button
                     className="btn btn-addto-cart"
                     type="button"
@@ -64,12 +59,9 @@ export const Books = (props) => {
                   </button>
                   <div className="button-set">
                     <div className="wishlist-btn">
-                      <a
-                        className="wishlist add-to-wishlist"
-                        href="wishlist.html"
-                      >
+                      <button className="wishlist add-to-wishlist">
                         <i className="icon anm anm-heart-l" />
-                      </a>
+                      </button>
                     </div>
                   </div>
                   {/* end product button */}
@@ -79,7 +71,7 @@ export const Books = (props) => {
                 <div className="product-details text-center">
                   {/* product name */}
                   <div className="product-name">
-                    <a href="product-layout-1.html">{item.book_name}</a>
+                    <NavLink to={`books/${item._id}`}>{item.book_name}</NavLink>
                   </div>
                   <div className="product-price">
                     {item.authors.map((author) => (
