@@ -168,14 +168,14 @@ export const Library = () => {
                             bookType.filter((item) => item !== item._id);
                             setPagination({
                               ...pagination,
-                              bookType: filter.publisher,
+                              publisher: filter.publisher,
                             });
                           } else {
                             filter.publisher.push(value);
 
                             setPagination({
                               ...pagination,
-                              bookType: filter.publisher,
+                              publisher: filter.publisher,
                             });
                           }
                         }}
