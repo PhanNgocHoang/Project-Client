@@ -19,6 +19,12 @@ const upload = axios.create({
 export const checkLogin = async function (params) {
   return await instance.post("/auth/login", params);
 };
+export const loginWithGoogle = async function (params) {
+  return await instance.post("/auth/google", params);
+};
+export const loginWithFacebook = async function (params) {
+  return await instance.post("/auth/facebook", params);
+};
 export const register = async function (params) {
   return await instance.post("/auth/register", params);
 };
@@ -52,8 +58,8 @@ export const getReview = async function (params, pagination) {
 export const FavoriteBook = async function (params) {
   return await instance.post("book//favorite", params);
 };
-export const urlSignInWithGoogle =
-  "https://e-libraryapi.herokuapp.com/auth/google";
+export const urlSignInWithGoogle = "http://localhost:4000/auth/google";
+// "https://e-libraryapi.herokuapp.com/auth/google";
 export const urlSignInWithFacebook =
   // "http://localhost:4000/auth/facebook";
   "https://e-libraryapi.herokuapp.com/auth/facebook";

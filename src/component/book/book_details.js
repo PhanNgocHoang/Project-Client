@@ -16,8 +16,14 @@ import queryString from "query-string";
 const validationSchema = yup.object().shape({
   content: yup.string().required("Please enter your review"),
 });
+const orderValidationSchema = yup.object().shape({
+  totalDate: yup.number().min(1).required(),
+});
 export const BookDetails = (prop) => {
   const dispatch = useDispatch();
+  const orderInitialValues = {
+    totalDate: 0,
+  };
   const user = useSelector((state) => {
     return state.login.data;
   });
@@ -120,19 +126,32 @@ export const BookDetails = (prop) => {
                 </p>
                 {/* Product Action */}
                 <div className="product-action clearfix">
-                  <div style={{ marginBottom: 5 }}>
-                    <span>Day number</span>
-                    <input type="number" />
-                  </div>
-                  <div className="product-form__item--submit">
-                    <button
-                      type="button"
-                      name="add"
-                      className="btn product-form__cart-submit"
-                    >
-                      <span>Add to cart</span>
-                    </button>
-                  </div>
+                  <Formik
+                    initialValues={orderInitialValues}
+                    validationSchema={orderValidationSchema}
+                  >
+                    {(props) => (
+                      <Form>
+                        <div style={{ marginBottom: 5 }}>
+                          <span>Day number</span>
+                          <input
+                            type="number"
+                            name="totalDate"
+                            onChange={props.handleChange}
+                          />
+                        </div>
+                        <div className="product-form__item--submit">
+                          <button
+                            type="submit"
+                            name="add"
+                            className="btn product-form__cart-submit"
+                          >
+                            <span>Add to cart</span>
+                          </button>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
                 </div>
                 {/* End Product Action */}
                 <div className="display-table shareRow">

@@ -17,16 +17,14 @@ import * as yup from "yup";
 import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
+import FacebookLogin from "react-facebook-login";
+import GoogleLogin from "react-google-login";
 import {
-  FacebookLoginButton,
-  GoogleLoginButton,
-} from "react-social-login-buttons";
-import {
-  urlSignInWithGoogle,
-  urlSignInWithFacebook,
   checkLogin,
   uploadAvatar,
   register,
+  loginWithGoogle,
+  loginWithFacebook,
 } from "../../api/index.js";
 import { useAuth } from "../../hooks/useAuth";
 const validationSchema = yup.object().shape({
@@ -71,12 +69,6 @@ export const Header = () => {
   const user = useSelector((state) => {
     return state.login.data;
   });
-  const signInWithGoogle = () => {
-    return (window.location = urlSignInWithGoogle);
-  };
-  const signInWithFacebook = () => {
-    return (window.location = urlSignInWithFacebook);
-  };
   const closeSignIn = () => {
     setSigInScreen(false);
   };
@@ -92,6 +84,59 @@ export const Header = () => {
   const logOut = async () => {
     localStorage.removeItem("token");
     window.location = "/";
+  };
+  const responseGoogle = async (response) => {
+    try {
+      const result = await loginWithGoogle({
+        access_token: response.accessToken,
+      });
+      if (result.status === 200) {
+        setSigInScreen(false);
+        localStorage.setItem("token", result.data.token);
+        dispatch({ type: "DATA_LOGIN", payload: result.data.user });
+        return Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        });
+      }
+    } catch (error) {
+      return Alert.error(
+        `<div role="alert">${error.response.data.message}</div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
+    }
+  };
+  const responseFacebook = async (response) => {
+    try {
+      const result = await loginWithFacebook({
+        access_token: response.accessToken,
+        user_id: response.id,
+      });
+      if (result.status === 200) {
+        setSigInScreen(false);
+        localStorage.setItem("token", result.data.token);
+        dispatch({ type: "DATA_LOGIN", payload: result.data.user });
+        return Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        });
+      }
+    } catch (error) {
+      return Alert.error(
+        `<div role="alert">${error.response.data.message}</div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
+    }
   };
   return (
     <div>
@@ -447,7 +492,6 @@ export const Header = () => {
                   closeSignIn();
                   localStorage.setItem("token", result.data.token);
                   dispatch({ type: "DATA_LOGIN", payload: result.data.user });
-                  console.log(result.data);
                   return Alert.success(
                     `<div role="alert"> Sign In Successfully </div>`,
                     {
@@ -525,16 +569,23 @@ export const Header = () => {
                 <Modal.Footer>
                   <Button
                     type="submit"
-                    style={{ height: 47, width: 250, borderRadius: 4 }}
+                    style={{ height: 47, width: 150, borderRadius: 4 }}
                   >
                     Sign in <i className="fa fa-sign-in" aria-hidden="true"></i>
                   </Button>
-                  <GoogleLoginButton
-                    onClick={signInWithGoogle}
-                  ></GoogleLoginButton>
-                  <FacebookLoginButton
-                    onClick={signInWithFacebook}
-                  ></FacebookLoginButton>
+                  <GoogleLogin
+                    clientId="262517224867-kufcnkfvmehbscpl4q8tgvpd9sru5hpg.apps.googleusercontent.com"
+                    buttonText="SignIn With Google"
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    cookiePolicy={"single_host_origin"}
+                  />
+                  <FacebookLogin
+                    appId="322522312399138"
+                    autoLoad={false}
+                    callback={responseFacebook}
+                  />
+                  ,
                 </Modal.Footer>
               </Form>
             )}
