@@ -19,6 +19,7 @@ export const useAuth = () => {
     const jwt = localStorage.getItem("token");
     executeFetchMe(jwt).then((user) => {
       dispatch({ type: "DATA_LOGIN", payload: user });
+      localStorage.setItem("_id", user._id);
     });
   }, [executeFetchMe, dispatch]);
   return fetchMeApiData;

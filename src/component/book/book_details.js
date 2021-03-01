@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
-import { getBookDetails } from "../../api/index";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { Form, Modal } from "react-bootstrap";
+import { Form, Modal, Button } from "react-bootstrap";
 import "react-tabs/style/react-tabs.css";
 import * as yup from "yup";
-import { createReview, getReview } from "../../api/index";
+import {
+  createReview,
+  getReview,
+  createOrder,
+  getBookDetails,
+} from "../../api/index";
 import { NavLink } from "react-router-dom";
 import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
@@ -17,7 +21,10 @@ const validationSchema = yup.object().shape({
   content: yup.string().required("Please enter your review"),
 });
 const orderValidationSchema = yup.object().shape({
-  totalDate: yup.number().min(1).required(),
+  totalDate: yup
+    .number()
+    .min(1, "Please enter a day number")
+    .required("Please enter a date number"),
 });
 export const BookDetails = (prop) => {
   const dispatch = useDispatch();
@@ -128,26 +135,92 @@ export const BookDetails = (prop) => {
                 <div className="product-action clearfix">
                   <Formik
                     initialValues={orderInitialValues}
+                    onSubmit={async (values) => {
+                      try {
+                        if (!user._id) {
+                          return Alert.warning(
+                            `<div role="alert">
+                                      Please sign in to read
+                                      </div>`,
+                            {
+                              html: true,
+                              position: "top-right",
+                              effect: "slide",
+                            }
+                          );
+                        }
+                        const totalPrice = values.totalDate * bookDetail.price;
+                        if (totalPrice > user.wallet) {
+                          return Alert.warning(
+                            `<div role="alert">
+                                      Your eCoins are not enough to borrow this book
+                                      </div>`,
+                            {
+                              html: true,
+                              position: "top-right",
+                              effect: "slide",
+                            }
+                          );
+                        }
+                        values.price = totalPrice;
+                        values.userId = user._id;
+                        values.bookId = bookDetail._id;
+                        values.endAt = moment(new Date())
+                          .add(values.totalDate, "day")
+                          .format("YYYY-MM-DD");
+                        values.startedAt = moment(new Date()).format(
+                          "YYYY-MM-DD"
+                        );
+
+                        const result = await createOrder(values);
+                        return Alert.success(
+                          `<div role="alert">
+                                      ${result.data.message}
+                                      </div>`,
+                          {
+                            html: true,
+                            position: "top-right",
+                            effect: "slide",
+                          }
+                        );
+                      } catch (error) {
+                        return Alert.error(
+                          `<div role="alert">
+                                  ${error.response.data.message}</div>`,
+                          {
+                            html: true,
+                            position: "top-right",
+                            effect: "slide",
+                          }
+                        );
+                      }
+                    }}
                     validationSchema={orderValidationSchema}
                   >
                     {(props) => (
-                      <Form>
+                      <Form onSubmit={props.handleSubmit}>
                         <div style={{ marginBottom: 5 }}>
                           <span>Day number</span>
-                          <input
+                          <Form.Control
                             type="number"
                             name="totalDate"
                             onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            isInvalid={
+                              props.touched.totalDate && props.errors.totalDate
+                            }
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {props.touched.totalDate && props.errors.totalDate}
+                          </Form.Control.Feedback>
                         </div>
                         <div className="product-form__item--submit">
-                          <button
+                          <Button
                             type="submit"
-                            name="add"
-                            className="btn product-form__cart-submit"
+                            className="btn btn-success product-form__cart-submit"
                           >
-                            <span>Add to cart</span>
-                          </button>
+                            <span>{"Borrow"}</span>
+                          </Button>
                         </div>
                       </Form>
                     )}

@@ -50,12 +50,12 @@ export const Books = (props) => {
                     />
                   </div>
                   <button
-                    className="btn btn-addto-cart"
+                    className="btn btn-success btn-addto-cart"
                     type="button"
                     style={{ marginTop: 3 }}
                     tabIndex={0}
                   >
-                    Add To Cart
+                    Borrow
                   </button>
                   <div className="button-set">
                     <div className="wishlist-btn">

@@ -25,8 +25,10 @@ import {
   register,
   loginWithGoogle,
   loginWithFacebook,
+  addCoins,
 } from "../../api/index.js";
 import { useAuth } from "../../hooks/useAuth";
+import PayPal from "../../utils/paypal";
 const validationSchema = yup.object().shape({
   email: yup.string().email("Email invalid").required("Email is required"),
   password: yup
@@ -49,9 +51,19 @@ const validationSchemaRegister = yup.object().shape({
   dob: yup.date().required("Day of birth is required"),
   photoUrl: yup.string().required("Please choose a avatar"),
 });
+const validationMoneySchema = yup.object().shape({
+  money: yup
+    .number()
+    .min(1, "Minimum amount is 1 dollar")
+    .required("Please enter a number money"),
+});
 export const Header = () => {
   useAuth();
+  const [formAddCoins, setFormAddCoins] = useState(false);
   const dispatch = useDispatch();
+  const initialMoney = {
+    money: 0,
+  };
   const initialValues = {
     email: "",
     password: "",
@@ -64,8 +76,10 @@ export const Header = () => {
     dob: "",
     photoUrl: "",
   };
+  const [numberMoney, setNumberMoney] = useState(0);
   const [signInScreen, setSigInScreen] = useState(false);
   const [signUpScreen, setSigUpScreen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(false);
   const user = useSelector((state) => {
     return state.login.data;
   });
@@ -83,6 +97,7 @@ export const Header = () => {
   };
   const logOut = async () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("_id");
     window.location = "/";
   };
   const responseGoogle = async (response) => {
@@ -137,6 +152,42 @@ export const Header = () => {
         }
       );
     }
+  };
+  const transactionSuccess = async (data) => {
+    try {
+      const response = await addCoins({
+        paymentId: data.paymentID,
+        userId: user._id,
+      });
+      setPaymentMethod(false);
+      return Alert.success(
+        `<div role="alert"> ${response.data.message} </div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
+    } catch (error) {
+      return Alert.error(
+        `<div role="alert">${error.response.data.message}</div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
+    }
+  };
+  const transactionError = (err) => {
+    return Alert.error(`<div role="alert">${err.message}</div>`, {
+      html: true,
+      position: "top-right",
+      effect: "slide",
+    });
+  };
+  const transactionCanceled = () => {
+    console.log("Transaction called successfully");
   };
   return (
     <div>
@@ -193,14 +244,22 @@ export const Header = () => {
                                 <ListGroup.Item>
                                   <NavLink to="/me">Update Profile</NavLink>
                                 </ListGroup.Item>
-                                <ListGroup.Item>My Book</ListGroup.Item>
                                 <ListGroup.Item>
-                                  Borrowing history
+                                  <NavLink to="/me">Update Profile</NavLink>
+                                </ListGroup.Item>
+                                <ListGroup.Item
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setFormAddCoins(true);
+                                  }}
+                                >
+                                  Add eCoins
                                 </ListGroup.Item>
                                 <ListGroup.Item
                                   onClick={() => {
                                     logOut();
                                   }}
+                                  style={{ cursor: "pointer" }}
                                 >
                                   LogOut
                                 </ListGroup.Item>
@@ -214,7 +273,11 @@ export const Header = () => {
                             src={user.photoUrl}
                             alt=""
                             className="border rounded-circle"
-                            style={{ width: 35, marginLeft: "3%" }}
+                            style={{
+                              width: 35,
+                              marginLeft: "3%",
+                              cursor: "pointer",
+                            }}
                           />
                         </div>
                       </OverlayTrigger>
@@ -252,158 +315,6 @@ export const Header = () => {
             </div>
             {/*Mobile Logo*/}
             <div className="col-4 col-sm-4 col-md-4 col-lg-3">
-              <div className="site-cart">
-                <a href="#" className="site-header__cart" title="Cart">
-                  <i className="icon anm anm-bag-l" />
-                  <span
-                    id="CartCount"
-                    className="site-header__cart-count"
-                    data-cart-render="item_count"
-                  >
-                    2
-                  </span>
-                </a>
-                {/*Minicart Popup*/}
-                <div id="header-cart" className="block block-cart">
-                  <ul className="mini-products-list">
-                    <li className="item">
-                      <a className="product-image" href="#">
-                        <img
-                          src="assets/images/product-images/cape-dress-1.jpg"
-                          alt="3/4 Sleeve Kimono Dress"
-                          title
-                        />
-                      </a>
-                      <div className="product-details">
-                        <a href="#" className="remove">
-                          <i className="anm anm-times-l" aria-hidden="true" />
-                        </a>
-                        <a href="#" className="edit-i remove">
-                          <i className="anm anm-edit" aria-hidden="true" />
-                        </a>
-                        <a className="pName" href="cart.html">
-                          Sleeve Kimono Dress
-                        </a>
-                        <div className="variant-cart">Black / XL</div>
-                        <div className="wrapQtyBtn">
-                          <div className="qtyField">
-                            <span className="label">Qty:</span>
-                            <a
-                              className="qtyBtn minus"
-                              href="javascript:void(0);"
-                            >
-                              <i
-                                className="fa anm anm-minus-r"
-                                aria-hidden="true"
-                              />
-                            </a>
-                            <input
-                              type="text"
-                              id="Quantity"
-                              name="quantity"
-                              defaultValue={1}
-                              className="product-form__input qty"
-                            />
-                            <a
-                              className="qtyBtn plus"
-                              href="javascript:void(0);"
-                            >
-                              <i
-                                className="fa anm anm-plus-r"
-                                aria-hidden="true"
-                              />
-                            </a>
-                          </div>
-                        </div>
-                        <div className="priceRow">
-                          <div className="product-price">
-                            <span className="money">$59.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="item">
-                      <a className="product-image" href="#">
-                        <img
-                          src="assets/images/product-images/cape-dress-2.jpg"
-                          alt="Elastic Waist Dress - Black / Small"
-                          title
-                        />
-                      </a>
-                      <div className="product-details">
-                        <a href="#" className="remove">
-                          <i className="anm anm-times-l" aria-hidden="true" />
-                        </a>
-                        <a href="#" className="edit-i remove">
-                          <i className="anm anm-edit" aria-hidden="true" />
-                        </a>
-                        <a className="pName" href="cart.html">
-                          Elastic Waist Dress
-                        </a>
-                        <div className="variant-cart">Gray / XXL</div>
-                        <div className="wrapQtyBtn">
-                          <div className="qtyField">
-                            <span className="label">Qty:</span>
-                            <a
-                              className="qtyBtn minus"
-                              href="javascript:void(0);"
-                            >
-                              <i
-                                className="fa anm anm-minus-r"
-                                aria-hidden="true"
-                              />
-                            </a>
-                            <input
-                              type="text"
-                              id="Quantity"
-                              name="quantity"
-                              defaultValue={1}
-                              className="product-form__input qty"
-                            />
-                            <a
-                              className="qtyBtn plus"
-                              href="javascript:void(0);"
-                            >
-                              <i
-                                className="fa anm anm-plus-r"
-                                aria-hidden="true"
-                              />
-                            </a>
-                          </div>
-                        </div>
-                        <div className="priceRow">
-                          <div className="product-price">
-                            <span className="money">$99.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                  <div className="total">
-                    <div className="total-in">
-                      <span className="label">Cart Subtotal:</span>
-                      <span className="product-price">
-                        <span className="money">$748.00</span>
-                      </span>
-                    </div>
-                    <div className="buttonSet text-center">
-                      <a
-                        href="cart.html"
-                        className="btn btn-secondary btn--small"
-                      >
-                        View Cart
-                      </a>
-                      <a
-                        href="checkout.html"
-                        className="btn btn-secondary btn--small"
-                      >
-                        Checkout
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                {/*End Minicart Popup*/}
-              </div>
               <div className="site-header__search">
                 <button type="button" className="search-trigger">
                   <i className="icon anm anm-search-l" />
@@ -431,9 +342,22 @@ export const Header = () => {
                         <ListGroup.Item>
                           <NavLink to="/me">Update Profile</NavLink>
                         </ListGroup.Item>
-                        <ListGroup.Item>My Book</ListGroup.Item>
-                        <ListGroup.Item>Borrowing history</ListGroup.Item>
-                        <ListGroup.Item>LogOut</ListGroup.Item>
+                        <ListGroup.Item>
+                          <NavLink to="/me">Update Profile</NavLink>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <ListGroup.Item style={{ cursor: "pointer" }}>
+                            Add eCoins
+                          </ListGroup.Item>
+                        </ListGroup.Item>
+                        <ListGroup.Item
+                          onClick={() => {
+                            logOut();
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          LogOut
+                        </ListGroup.Item>
                       </ListGroup>
                     </Popover.Content>
                   </Popover>
@@ -444,7 +368,7 @@ export const Header = () => {
                     src={user.photoUrl}
                     alt=""
                     className="border rounded-circle"
-                    style={{ width: 35, marginLeft: "3%" }}
+                    style={{ width: 35, marginLeft: "3%", cursor: "pointer" }}
                   />
                   <span style={{ marginLeft: 5 }}>{user.displayName}</span>
                 </div>
@@ -819,6 +743,95 @@ export const Header = () => {
             </Formik>
           </div>
         </Modal.Body>
+      </Modal>
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={formAddCoins}
+        onHide={() => {
+          setFormAddCoins(false);
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Add eCoins
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            initialValues={initialMoney}
+            validationSchema={validationMoneySchema}
+            onSubmit={(value) => {
+              setFormAddCoins(false);
+              setPaymentMethod(true);
+              setNumberMoney(value.money);
+            }}
+          >
+            {(props) => (
+              <Form
+                onSubmit={props.handleSubmit}
+                id="new-review-form"
+                className="new-review-form"
+              >
+                <Form.Label column lg={3.5}>
+                  Amount of money: Unit $(USD)
+                </Form.Label>
+                <Form.Control
+                  lg={4}
+                  type="number"
+                  name="money"
+                  placeholder="Enter you money"
+                  style={{ width: "65%" }}
+                  className="ml-3"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  isInvalid={props.touched.money && props.errors.money}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {props.touched.money && props.errors.money}
+                </Form.Control.Feedback>
+                <Modal.Footer>
+                  <Button className="btn btn-primary" type="submit">
+                    Submit
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={paymentMethod}
+        onHide={() => {
+          setPaymentMethod(false);
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Add Method
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <PayPal
+            toPay={numberMoney}
+            onSuccess={transactionSuccess}
+            transactionError={transactionError}
+            transactionCanceled={transactionCanceled}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={() => {
+              setPaymentMethod(false);
+            }}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );
