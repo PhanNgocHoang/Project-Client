@@ -77,15 +77,18 @@ export const Header = () => {
     photoUrl: "",
   };
   const [numberMoney, setNumberMoney] = useState(0);
-  const [signInScreen, setSigInScreen] = useState(false);
+  const signInScreenStatus = useSelector((state) => {
+    return state.formLoginStatus;
+  });
   const [signUpScreen, setSigUpScreen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(false);
   const user = useSelector((state) => {
     return state.login.data;
   });
   const closeSignIn = () => {
-    setSigInScreen(false);
+    dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
   };
+
   const closeSignUp = async function () {
     setSigUpScreen(false);
   };
@@ -98,7 +101,7 @@ export const Header = () => {
   const logOut = async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("_id");
-    window.location = "/";
+    window.location.href = "/";
   };
   const responseGoogle = async (response) => {
     try {
@@ -106,9 +109,10 @@ export const Header = () => {
         access_token: response.accessToken,
       });
       if (result.status === 200) {
-        setSigInScreen(false);
+        closeSignIn();
         localStorage.setItem("token", result.data.token);
         dispatch({ type: "DATA_LOGIN", payload: result.data.user });
+        localStorage.setItem("_id", result.data.user._id);
         return Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
           html: true,
           position: "top-right",
@@ -133,14 +137,15 @@ export const Header = () => {
         user_id: response.id,
       });
       if (result.status === 200) {
-        setSigInScreen(false);
         localStorage.setItem("token", result.data.token);
+        localStorage.setItem("_id", result.data.user._id);
         dispatch({ type: "DATA_LOGIN", payload: result.data.user });
-        return Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
+        Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
           html: true,
           position: "top-right",
           effect: "slide",
         });
+        return (window.location.href = "/");
       }
     } catch (error) {
       return Alert.error(
@@ -187,7 +192,14 @@ export const Header = () => {
     });
   };
   const transactionCanceled = () => {
-    console.log("Transaction called successfully");
+    return Alert.success(
+      `<div role="alert">Transaction called successfully</div>`,
+      {
+        html: true,
+        position: "top-right",
+        effect: "slide",
+      }
+    );
   };
   return (
     <div>
@@ -287,7 +299,16 @@ export const Header = () => {
                       className="lvl1 parent megamenu"
                       style={{ cursor: "pointer" }}
                     >
-                      <a onClick={() => setSigInScreen(true)}>Sign In</a>
+                      <a
+                        onClick={() => {
+                          dispatch({
+                            type: "FORM_LOGIN_STATUS",
+                            payload: true,
+                          });
+                        }}
+                      >
+                        Sign In
+                      </a>
                     </li>
                   )}
                   {user.email ? null : (
@@ -376,7 +397,16 @@ export const Header = () => {
             </li>
           ) : (
             <li className="lvl1 parent megamenu" style={{ cursor: "pointer" }}>
-              <a onClick={() => setSigInScreen(true)}>Sign In</a>
+              <a
+                onClick={() => {
+                  dispatch({
+                    type: "FORM_LOGIN_STATUS",
+                    payload: true,
+                  });
+                }}
+              >
+                Sign In
+              </a>
             </li>
           )}
           {user.email ? null : (
@@ -397,7 +427,7 @@ export const Header = () => {
       </div>
 
       <Modal
-        show={signInScreen}
+        show={signInScreenStatus.data}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -415,6 +445,7 @@ export const Header = () => {
                 if (result.status === 200) {
                   closeSignIn();
                   localStorage.setItem("token", result.data.token);
+                  localStorage.setItem("_id", result.data.user._id);
                   dispatch({ type: "DATA_LOGIN", payload: result.data.user });
                   return Alert.success(
                     `<div role="alert"> Sign In Successfully </div>`,

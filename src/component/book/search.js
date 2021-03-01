@@ -65,6 +65,14 @@ export const Search = () => {
               </Link>
             ))}
           </div>
+          <button
+            className="btn btn-dark"
+            onClick={() => {
+              setPagination({ ...pagination, limit: pagination.limit + 5 });
+            }}
+          >
+            Load More
+          </button>
         </div>
         <button
           type="button"

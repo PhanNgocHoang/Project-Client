@@ -10,7 +10,11 @@ import {
   getReview,
   createOrder,
   getBookDetails,
+  FavoriteBook,
 } from "../../api/index";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
@@ -46,14 +50,17 @@ export const BookDetails = (prop) => {
   const bookId = prop.match.params.book_id;
   const [bookDetail, setBookDetail] = useState({});
   const [publisher, setPublisher] = useState({});
+  const [userFavorite, setUserFavorite] = useState([]);
+  const [isLoad, setLoad] = useState(false);
   const getBook = async (bookId) => {
     const book = await getBookDetails(bookId);
     setBookDetail(book.data.data);
     setPublisher(book.data.data.publisher);
+    setUserFavorite(book.data.data.userFavorite);
   };
   useEffect(() => {
     getBook(bookId);
-  }, [bookId, reviews]);
+  }, [bookId, reviews, isLoad]);
   const getReviews = async () => {
     const paramsString = queryString.stringify(reviewPage);
     const result = await getReview(bookId, paramsString);
@@ -63,6 +70,19 @@ export const BookDetails = (prop) => {
   useEffect(() => {
     getReviews();
   }, [showWriteReview, reviewPage]);
+  const addToMyFavorite = async (id) => {
+    if (localStorage.getItem("_id") === null) {
+      dispatch({ type: "FORM_LOGIN_STATUS", payload: true });
+    } else {
+      const response = await FavoriteBook({
+        bookId: bookDetail._id,
+        userId: user._id,
+      });
+      setBookDetail(response.data.result);
+      setPublisher(response.data.result.publisher);
+      setLoad(!isLoad);
+    }
+  };
   return (
     <div id="MainContent" className="main-content" role="main">
       <Alert stack={{ limit: 3 }} />
@@ -233,10 +253,22 @@ export const BookDetails = (prop) => {
                       <button
                         className="wishlist add-to-wishlist"
                         title="Add to Wishlist"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          addToMyFavorite(bookDetail._id);
+                        }}
                       >
-                        <i
-                          className="icon anm anm-heart-l"
-                          aria-hidden="true"
+                        <FontAwesomeIcon
+                          icon={
+                            userFavorite.some((userId) => userId === user._id)
+                              ? fasHeart
+                              : faHeart
+                          }
+                          color={
+                            userFavorite.some((userId) => userId === user._id)
+                              ? "#ed8a8a"
+                              : "#ececec"
+                          }
                         />
                         <span>Add to Wishlist</span>
                       </button>
