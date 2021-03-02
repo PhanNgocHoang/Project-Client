@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Modal,
@@ -53,12 +53,13 @@ const validationSchemaRegister = yup.object().shape({
 });
 const validationMoneySchema = yup.object().shape({
   money: yup
-    .number()
+    .number("Your money is not valid. Example: 1.1")
     .min(1, "Minimum amount is 1 dollar")
     .required("Please enter a number money"),
 });
 export const Header = () => {
   useAuth();
+  const history = useHistory();
   const [formAddCoins, setFormAddCoins] = useState(false);
   const dispatch = useDispatch();
   const initialMoney = {
@@ -85,6 +86,7 @@ export const Header = () => {
   const user = useSelector((state) => {
     return state.login.data;
   });
+  const [userWallet, setUserWallet] = useState(user.wallet);
   const closeSignIn = () => {
     dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
   };
@@ -109,15 +111,16 @@ export const Header = () => {
         access_token: response.accessToken,
       });
       if (result.status === 200) {
-        closeSignIn();
         localStorage.setItem("token", result.data.token);
         dispatch({ type: "DATA_LOGIN", payload: result.data.user });
         localStorage.setItem("_id", result.data.user._id);
-        return Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
+        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
+        Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
           html: true,
           position: "top-right",
           effect: "slide",
         });
+        return history.push();
       }
     } catch (error) {
       return Alert.error(
@@ -140,12 +143,13 @@ export const Header = () => {
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("_id", result.data.user._id);
         dispatch({ type: "DATA_LOGIN", payload: result.data.user });
+        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
         Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
           html: true,
           position: "top-right",
           effect: "slide",
         });
-        return (window.location.href = "/");
+        return history.push();
       }
     } catch (error) {
       return Alert.error(
@@ -165,6 +169,7 @@ export const Header = () => {
         userId: user._id,
       });
       setPaymentMethod(false);
+      document.getElementById("user").click();
       return Alert.success(
         `<div role="alert"> ${response.data.message} </div>`,
         {
@@ -241,65 +246,13 @@ export const Header = () => {
                   <li className="lvl1 parent megamenu">
                     <NavLink to="/favorite">Favorite</NavLink>
                   </li>
-                  {user.email ? (
-                    <li>
-                      <OverlayTrigger
-                        placement="bottom"
-                        trigger="click"
-                        overlay={
-                          <Popover>
-                            <Popover.Title as="h3">
-                              {user.displayName}
-                            </Popover.Title>
-                            <Popover.Content>
-                              <ListGroup variant="flush">
-                                <ListGroup.Item>
-                                  <NavLink to="/me">Update Profile</NavLink>
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                  <NavLink to="/me">Update Profile</NavLink>
-                                </ListGroup.Item>
-                                <ListGroup.Item
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setFormAddCoins(true);
-                                  }}
-                                >
-                                  Add eCoins
-                                </ListGroup.Item>
-                                <ListGroup.Item
-                                  onClick={() => {
-                                    logOut();
-                                  }}
-                                  style={{ cursor: "pointer" }}
-                                >
-                                  LogOut
-                                </ListGroup.Item>
-                              </ListGroup>
-                            </Popover.Content>
-                          </Popover>
-                        }
-                      >
-                        <div>
-                          <img
-                            src={user.photoUrl}
-                            alt=""
-                            className="border rounded-circle"
-                            style={{
-                              width: 35,
-                              marginLeft: "3%",
-                              cursor: "pointer",
-                            }}
-                          />
-                        </div>
-                      </OverlayTrigger>
-                    </li>
-                  ) : (
+                  {user.email ? null : (
                     <li
                       className="lvl1 parent megamenu"
                       style={{ cursor: "pointer" }}
                     >
-                      <a
+                      <NavLink
+                        to="#"
                         onClick={() => {
                           dispatch({
                             type: "FORM_LOGIN_STATUS",
@@ -308,7 +261,7 @@ export const Header = () => {
                         }}
                       >
                         Sign In
-                      </a>
+                      </NavLink>
                     </li>
                   )}
                   {user.email ? null : (
@@ -326,16 +279,74 @@ export const Header = () => {
             {/*Mobile Logo*/}
             <div className="col-6 col-sm-6 col-md-5 col-lg-1 d-block d-lg-none mobile-logo">
               <div className="logo">
-                <a href="index.html">
+                <NavLink to="/">
                   <Image
                     src="https://res.cloudinary.com/dps6fac1c/image/upload/v1613621648/images/e-library_uxmixc.png"
                     style={{ width: "50%", height: "50%" }}
                   />
-                </a>
+                </NavLink>
               </div>
             </div>
             {/*Mobile Logo*/}
             <div className="col-4 col-sm-4 col-md-4 col-lg-3">
+              <div className="site-cart">
+                {user.email ? (
+                  <OverlayTrigger
+                    placement="auto"
+                    trigger="click"
+                    overlay={
+                      <Popover>
+                        <Popover.Title as="h3">
+                          {user.displayName}
+                        </Popover.Title>
+                        <Popover.Content>
+                          <ListGroup variant="flush">
+                            <ListGroup.Item>
+                              <NavLink to="/me">Update Profile</NavLink>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              <NavLink to="/myLibrary">My Library</NavLink>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              My eCoins: {user.wallet}
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                document.getElementById("user").click();
+                                setFormAddCoins(true);
+                              }}
+                            >
+                              Add eCoins
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                              onClick={() => {
+                                logOut();
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              LogOut
+                            </ListGroup.Item>
+                          </ListGroup>
+                        </Popover.Content>
+                      </Popover>
+                    }
+                  >
+                    <div id="userMobile">
+                      <Image
+                        src={user.photoUrl}
+                        alt=""
+                        className="border rounded-circle"
+                        style={{
+                          width: 35,
+                          marginLeft: "3%",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </div>
+                  </OverlayTrigger>
+                ) : null}
+              </div>
               <div className="site-header__search">
                 <button type="button" className="search-trigger">
                   <i className="icon anm anm-search-l" />
@@ -346,58 +357,19 @@ export const Header = () => {
         </div>
       </div>
       <div className="mobile-nav-wrapper" role="navigation">
-        <div className="closemobileMenu">
+        <div
+          className="closemobileMenu"
+          onClick={() => {
+            document.getElementById("userMobile").click();
+          }}
+        >
           <i className="icon anm anm-times-l pull-right" /> Close Menu
         </div>
         <ul id="MobileNav" className="mobile-nav">
-          {user.email ? (
-            <li>
-              <OverlayTrigger
-                placement="auto"
-                trigger="click"
-                overlay={
-                  <Popover>
-                    <Popover.Title as="h3">{user.displayName}</Popover.Title>
-                    <Popover.Content>
-                      <ListGroup variant="flush">
-                        <ListGroup.Item>
-                          <NavLink to="/me">Update Profile</NavLink>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <NavLink to="/me">Update Profile</NavLink>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <ListGroup.Item style={{ cursor: "pointer" }}>
-                            Add eCoins
-                          </ListGroup.Item>
-                        </ListGroup.Item>
-                        <ListGroup.Item
-                          onClick={() => {
-                            logOut();
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          LogOut
-                        </ListGroup.Item>
-                      </ListGroup>
-                    </Popover.Content>
-                  </Popover>
-                }
-              >
-                <div>
-                  <Image
-                    src={user.photoUrl}
-                    alt=""
-                    className="border rounded-circle"
-                    style={{ width: 35, marginLeft: "3%", cursor: "pointer" }}
-                  />
-                  <span style={{ marginLeft: 5 }}>{user.displayName}</span>
-                </div>
-              </OverlayTrigger>
-            </li>
-          ) : (
+          {user.email ? null : (
             <li className="lvl1 parent megamenu" style={{ cursor: "pointer" }}>
-              <a
+              <NavLink
+                to="#"
                 onClick={() => {
                   dispatch({
                     type: "FORM_LOGIN_STATUS",
@@ -406,7 +378,7 @@ export const Header = () => {
                 }}
               >
                 Sign In
-              </a>
+              </NavLink>
             </li>
           )}
           {user.email ? null : (
@@ -421,7 +393,7 @@ export const Header = () => {
             <NavLink to="/library">Library</NavLink>
           </li>
           <li className="lvl1 parent megamenu">
-            <NavLink to="/library">Favorite</NavLink>
+            <NavLink to="/favorite">Favorite</NavLink>
           </li>
         </ul>
       </div>
@@ -443,11 +415,10 @@ export const Header = () => {
               try {
                 const result = await checkLogin(values);
                 if (result.status === 200) {
-                  closeSignIn();
                   localStorage.setItem("token", result.data.token);
                   localStorage.setItem("_id", result.data.user._id);
                   dispatch({ type: "DATA_LOGIN", payload: result.data.user });
-                  return Alert.success(
+                  Alert.success(
                     `<div role="alert"> Sign In Successfully </div>`,
                     {
                       html: true,
@@ -455,6 +426,7 @@ export const Header = () => {
                       effect: "slide",
                     }
                   );
+                  return history.push();
                 }
               } catch (error) {
                 return Alert.error(
@@ -810,7 +782,7 @@ export const Header = () => {
                 </Form.Label>
                 <Form.Control
                   lg={4}
-                  type="number"
+                  type="text"
                   name="money"
                   placeholder="Enter you money"
                   style={{ width: "65%" }}

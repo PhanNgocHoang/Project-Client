@@ -2,8 +2,8 @@ import axios from "axios";
 
 const jwt = localStorage.getItem("token");
 const instance = axios.create({
-  baseURL: `https://e-libraryapi.herokuapp.com/`,
-  // baseURL: `http://localhost:4000`,
+  // baseURL: `https://e-libraryapi.herokuapp.com/`,
+  baseURL: `http://localhost:4000`,
   headers: {
     "Content-Type": "application/json",
     Authorization: "Bearer " + jwt,
@@ -60,6 +60,12 @@ export const FavoriteBook = async function (params) {
 };
 export const myFavorites = async function (params, pagination) {
   return await instance.get(`/books/myBookFavorite/${params}?${pagination}`);
+};
+export const myBooks = async function (params, pagination) {
+  return await instance.get(`/books/myBook/${params}?${pagination}`);
+};
+export const myBooksStatus = async function (params, pagination) {
+  return await instance.get(`/books/myBook/status/${params}?${pagination}`);
 };
 export const myFavoritesLocal = async function (params, pagination) {
   return await instance.get(`/books/myBookFavoriteLocal?${pagination}`, params);

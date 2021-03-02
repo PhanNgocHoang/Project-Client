@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Books } from "../component/book/listBook";
 import { getAllBookTypes, getAllAuthor, getAllPublisher } from "../api/index";
-import { Form } from "react-bootstrap";
+import { Form, Image } from "react-bootstrap";
 
 export const Library = () => {
   let filter = {
@@ -45,7 +45,7 @@ export const Library = () => {
       <div className="collection-header">
         <div className="collection-hero">
           <div className="collection-hero__image">
-            <img
+            <Image
               className="blur-up lazyload"
               data-src="https://eknathmadhavicollege.in/wp-content/uploads/2020/07/library-shelves-banner-photo.jpg"
               src="https://eknathmadhavicollege.in/wp-content/uploads/2020/07/library-shelves-banner-photo.jpg"
@@ -200,55 +200,6 @@ export const Library = () => {
               </p>
             </div>
             <hr />
-            <div className="productList product-load-more">
-              {/*Toolbar*/}
-              <button
-                type="button"
-                className="btn btn-filter d-block d-md-none d-lg-none"
-              >
-                {" "}
-                Product Filters
-              </button>
-              <div className="toolbar">
-                <div className="filters-toolbar-wrapper">
-                  <div className="row">
-                    <div className="col-2 col-md-2 col-lg-2 text-center filters-toolbar__item filters-toolbar__item--count d-flex justify-content-center align-items-center">
-                      <span className="filters-toolbar__product-count">
-                        Showing: 22
-                      </span>
-                    </div>
-                    <div className="col-10 col-md-10 col-lg-10 text-right">
-                      <div className="filters-toolbar__item">
-                        <label htmlFor="SortBy" className="hidden">
-                          Sort
-                        </label>
-                        <select
-                          name="SortBy"
-                          id="SortBy"
-                          className="filters-toolbar__input filters-toolbar__input--sort"
-                        >
-                          <option value="title-ascending" selected="selected">
-                            Sort
-                          </option>
-                          <option>Best Selling</option>
-                          <option>Alphabetically, A-Z</option>
-                          <option>Alphabetically, Z-A</option>
-                          <option>Price, low to high</option>
-                          <option>Price, high to low</option>
-                          <option>Date, new to old</option>
-                          <option>Date, old to new</option>
-                        </select>
-                        <input
-                          className="collection-header__default-sort"
-                          type="hidden"
-                          defaultValue="manual"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div className="grid-products grid--view-items">
               <Books
                 position="col-6 col-sm-6 col-md-4 col-lg-3 item"
