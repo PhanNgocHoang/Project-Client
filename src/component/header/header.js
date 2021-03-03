@@ -27,6 +27,8 @@ import {
   loginWithFacebook,
   addCoins,
 } from "../../api/index.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faSign } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../hooks/useAuth";
 import PayPal from "../../utils/paypal";
 const validationSchema = yup.object().shape({
@@ -86,7 +88,6 @@ export const Header = () => {
   const user = useSelector((state) => {
     return state.login.data;
   });
-  const [userWallet, setUserWallet] = useState(user.wallet);
   const closeSignIn = () => {
     dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
   };
@@ -238,7 +239,7 @@ export const Header = () => {
                 {/* for mobile */}
                 <ul id="siteNav" className="site-nav medium center hidearrow">
                   <li className="lvl1 parent megamenu">
-                    <NavLink to="/">Home</NavLink>
+                    <NavLink to="/">Home </NavLink>
                   </li>
                   <li className="lvl1 parent megamenu">
                     <NavLink to="/library">Library</NavLink>
@@ -261,6 +262,12 @@ export const Header = () => {
                         }}
                       >
                         Sign In
+                        <FontAwesomeIcon
+                          icon={faSign}
+                          color="#60ccdb"
+                          size="lg"
+                          style={{ height: "10%" }}
+                        />
                       </NavLink>
                     </li>
                   )}
@@ -269,7 +276,15 @@ export const Header = () => {
                       className="lvl1 parent megamenu"
                       style={{ cursor: "pointer" }}
                     >
-                      <a onClick={() => setSigUpScreen(true)}>Sign Up</a>
+                      <NavLink to="#" onClick={() => setSigUpScreen(true)}>
+                        Sign Up
+                        <FontAwesomeIcon
+                          icon={faHome}
+                          color="#60ccdb"
+                          size="lg"
+                          style={{ height: "10%" }}
+                        />
+                      </NavLink>
                     </li>
                   )}
                 </ul>
@@ -313,8 +328,8 @@ export const Header = () => {
                             <ListGroup.Item
                               style={{ cursor: "pointer" }}
                               onClick={() => {
-                                document.getElementById("user").click();
                                 setFormAddCoins(true);
+                                document.getElementById("user").click();
                               }}
                             >
                               Add eCoins
@@ -332,10 +347,9 @@ export const Header = () => {
                       </Popover>
                     }
                   >
-                    <div id="userMobile">
+                    <div id="user">
                       <Image
                         src={user.photoUrl}
-                        alt=""
                         className="border rounded-circle"
                         style={{
                           width: 35,
@@ -357,12 +371,7 @@ export const Header = () => {
         </div>
       </div>
       <div className="mobile-nav-wrapper" role="navigation">
-        <div
-          className="closemobileMenu"
-          onClick={() => {
-            document.getElementById("userMobile").click();
-          }}
-        >
+        <div>
           <i className="icon anm anm-times-l pull-right" /> Close Menu
         </div>
         <ul id="MobileNav" className="mobile-nav">
@@ -383,7 +392,9 @@ export const Header = () => {
           )}
           {user.email ? null : (
             <li className="lvl1 parent megamenu" style={{ cursor: "pointer" }}>
-              <a onClick={() => setSigUpScreen(true)}>Sign Up</a>
+              <NavLink to="#" onClick={() => setSigUpScreen(true)}>
+                Sign Up
+              </NavLink>
             </li>
           )}
           <li className="lvl1 parent megamenu">

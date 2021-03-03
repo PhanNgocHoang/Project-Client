@@ -73,7 +73,6 @@ export const Library = () => {
                       <li key={item._id}>
                         <input
                           type="checkbox"
-                          defaultValue="allen-vela"
                           value={item._id}
                           onChange={(e) => {
                             const value = e.target.checked ? item._id : null;
@@ -115,7 +114,6 @@ export const Library = () => {
                     <li key={item._id}>
                       <input
                         type="checkbox"
-                        defaultValue="allen-vela"
                         value={item._id}
                         onChange={(e) => {
                           const value = e.target.checked ? item._id : null;
@@ -155,7 +153,6 @@ export const Library = () => {
                     <li key={item._id}>
                       <input
                         type="checkbox"
-                        defaultValue="allen-vela"
                         value={item._id}
                         onChange={(e) => {
                           const value = e.target.checked ? item._id : null;

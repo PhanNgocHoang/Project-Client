@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { Card, CardColumns, Button, Image } from "react-bootstrap";
+import { Image, Button } from "react-bootstrap";
 import { myBooks, myBooksStatus, FavoriteBook } from "../../api/index";
 import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import moment from "moment";
 export const MyLibrary = () => {
   const dispatch = useDispatch();
@@ -14,16 +15,13 @@ export const MyLibrary = () => {
   const [isLoad, setLoad] = useState(false);
   const [booksCanRead, setBooksCanRead] = useState([]);
   const [booksExpired, setBooksExpired] = useState([]);
-  const user = useSelector((state) => {
-    return state.login.data;
-  });
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 6,
+    limit: 8,
   });
   const [paginationStatus, setPaginationStatus] = useState({
     page: 1,
-    limit: 6,
+    limit: 8,
     status: true,
   });
   const getBooks = async () => {
@@ -124,19 +122,19 @@ export const MyLibrary = () => {
                     <div className="wishlist-btn">
                       <button
                         className="btn wishlist add-to-wishlist"
-                        onClick={() => addToMyFavorite(item._id)}
+                        onClick={() => addToMyFavorite(item.bookId._id)}
                       >
                         <FontAwesomeIcon
                           icon={
                             item.bookId.userFavorite.some(
-                              (userId) => userId._id === user._id
+                              (userId) => userId._id === localStorage.userId
                             )
                               ? fasHeart
                               : faHeart
                           }
                           color={
                             item.bookId.userFavorite.some(
-                              (userId) => userId._id === user._id
+                              (userId) => userId === item.userId
                             )
                               ? "#ed8a8a"
                               : "#ececec"
@@ -151,30 +149,70 @@ export const MyLibrary = () => {
                 {/*start product details */}
                 <div className="product-details text-center">
                   {/* product name */}
-                  <div
-                    // className="product-name"
-                    style={{
-                      height: 50,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {item.bookId.book_name}
+                  <NavLink to={`books/${item.bookId._id}`}>
+                    <div
+                      // className="product-name"
+                      style={{
+                        height: 50,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.bookId.book_name}
+                    </div>
+                  </NavLink>
+                  <div className="product-price">
+                    <span className="price">
+                      Total Date: {item.totalDate} Day
+                    </span>
                   </div>
                   <div className="product-price">
-                    <span className="price">{item.price} day/eCoins</span>
+                    <span className="price">
+                      Total Price: {item.price} eCoins
+                    </span>
                   </div>
-                  <button
-                    className="btn btn-success btn-addto-cart"
-                    type="button"
-                    style={{ marginTop: 3 }}
-                    tabIndex={0}
-                  >
-                    Borrow
-                  </button>
+                  <div className="product-price">
+                    <span className="price">
+                      Started At: {moment(item.startedAt).format("YYYY-MM-DD")}
+                    </span>
+                  </div>
+                  <div className="product-price">
+                    <span className="price">
+                      Started At: {moment(item.endAt).format("YYYY-MM-DD")}
+                    </span>
+                  </div>
+                  {item.status === true ? (
+                    <NavLink to={`/books/read/${item._id}`}>
+                      <button
+                        className="btn btn-success btn-addto-cart"
+                        type="button"
+                        style={{ marginTop: 3 }}
+                        tabIndex={0}
+                      >
+                        Read
+                      </button>
+                    </NavLink>
+                  ) : (
+                    <Button
+                      className="btn btn-danger"
+                      disabled
+                      style={{ marginTop: 3 }}
+                    >
+                      Expired
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}
+            <Button
+              variant="dark"
+              style={{ marginTop: 100, marginLeft: "45%", marginRight: "45%" }}
+              onClick={() => {
+                setPagination({ ...pagination, limit: pagination.limit + 4 });
+              }}
+            >
+              Load More
+            </Button>
           </div>
         </TabPanel>
         <TabPanel>
@@ -209,14 +247,14 @@ export const MyLibrary = () => {
                         <FontAwesomeIcon
                           icon={
                             item.bookId.userFavorite.some(
-                              (userId) => userId._id === user._id
+                              (userId) => userId._id === localStorage.userId
                             )
                               ? fasHeart
                               : faHeart
                           }
                           color={
                             item.bookId.userFavorite.some(
-                              (userId) => userId._id === user._id
+                              (userId) => userId === item.userId
                             )
                               ? "#ed8a8a"
                               : "#ececec"
@@ -231,18 +269,37 @@ export const MyLibrary = () => {
                 {/*start product details */}
                 <div className="product-details text-center">
                   {/* product name */}
-                  <div
-                    // className="product-name"
-                    style={{
-                      height: 50,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {item.bookId.book_name}
+                  <NavLink to={`books/${item.bookId._id}`}>
+                    <div
+                      // className="product-name"
+                      style={{
+                        height: 50,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.bookId.book_name}
+                    </div>
+                  </NavLink>
+                  <div className="product-price">
+                    <span className="price">
+                      Total Date: {item.totalDate} Day
+                    </span>
                   </div>
                   <div className="product-price">
-                    <span className="price">{item.price} day/eCoins</span>
+                    <span className="price">
+                      Total Price: {item.price} eCoins
+                    </span>
+                  </div>
+                  <div className="product-price">
+                    <span className="price">
+                      Started At: {moment(item.startedAt).format("YYYY-MM-DD")}
+                    </span>
+                  </div>
+                  <div className="product-price">
+                    <span className="price">
+                      Started At: {moment(item.endAt).format("YYYY-MM-DD")}
+                    </span>
                   </div>
                   <button
                     className="btn btn-success btn-addto-cart"
@@ -250,11 +307,23 @@ export const MyLibrary = () => {
                     style={{ marginTop: 3 }}
                     tabIndex={0}
                   >
-                    Borrow
+                    Read
                   </button>
                 </div>
               </div>
             ))}
+            <Button
+              variant="dark"
+              style={{ marginTop: 100, marginLeft: "45%", marginRight: "45%" }}
+              onClick={() => {
+                setPaginationStatus({
+                  ...paginationStatus,
+                  limit: paginationStatus.limit + 4,
+                });
+              }}
+            >
+              Load More
+            </Button>
           </div>
         </TabPanel>
         <TabPanel>
@@ -289,14 +358,14 @@ export const MyLibrary = () => {
                         <FontAwesomeIcon
                           icon={
                             item.bookId.userFavorite.some(
-                              (userId) => userId._id === user._id
+                              (userId) => userId._id === localStorage.userId
                             )
                               ? fasHeart
                               : faHeart
                           }
                           color={
                             item.bookId.userFavorite.some(
-                              (userId) => userId._id === user._id
+                              (userId) => userId === item.userId
                             )
                               ? "#ed8a8a"
                               : "#ececec"
@@ -311,30 +380,60 @@ export const MyLibrary = () => {
                 {/*start product details */}
                 <div className="product-details text-center">
                   {/* product name */}
-                  <div
-                    // className="product-name"
-                    style={{
-                      height: 50,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {item.bookId.book_name}
+                  <NavLink to={`books/${item.bookId._id}`}>
+                    <div
+                      // className="product-name"
+                      style={{
+                        height: 50,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.bookId.book_name}
+                    </div>
+                  </NavLink>
+                  <div className="product-price">
+                    <span className="price">
+                      Total Date: {item.totalDate} Day
+                    </span>
                   </div>
                   <div className="product-price">
-                    <span className="price">{item.price} day/eCoins</span>
+                    <span className="price">
+                      Total Price: {item.price} eCoins
+                    </span>
                   </div>
-                  <button
-                    className="btn btn-success btn-addto-cart"
-                    type="button"
+                  <div className="product-price">
+                    <span className="price">
+                      Started At: {moment(item.startedAt).format("YYYY-MM-DD")}
+                    </span>
+                  </div>
+                  <div className="product-price">
+                    <span className="price">
+                      Started At: {moment(item.endAt).format("YYYY-MM-DD")}
+                    </span>
+                  </div>
+                  <Button
+                    className="btn btn-danger"
+                    disabled
                     style={{ marginTop: 3 }}
-                    tabIndex={0}
                   >
-                    Borrow
-                  </button>
+                    Expired
+                  </Button>
                 </div>
               </div>
             ))}
+            <Button
+              variant="dark"
+              style={{ marginTop: 100, marginLeft: "45%", marginRight: "45%" }}
+              onClick={() => {
+                setPaginationStatus({
+                  ...paginationStatus,
+                  limit: paginationStatus.limit + 4,
+                });
+              }}
+            >
+              Load More
+            </Button>
           </div>
         </TabPanel>
       </Tabs>

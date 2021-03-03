@@ -30,7 +30,7 @@ export const Home = () => {
             />
             <div className="row">
               <div className="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                <button className="btn" onClick={() => loadMore()}>
+                <button className="btn btn-dark" onClick={() => loadMore()}>
                   View More
                 </button>
               </div>

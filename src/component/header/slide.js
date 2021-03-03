@@ -8,9 +8,8 @@ export const Slider = () => {
         <Carousel>
           <Carousel.Item interval={2000}>
             <Image
-              style={{ height: "100%" }}
               className="d-block w-100"
-              src="https://eknathmadhavicollege.in/wp-content/uploads/2020/07/library-shelves-banner-photo.jpg"
+              src="https://storage.googleapis.com/e-library-705ec.appspot.com/3025.jpg"
             />
             <Carousel.Caption>
               <NavLink to="/library">
@@ -21,7 +20,7 @@ export const Slider = () => {
           <Carousel.Item interval={2000}>
             <Image
               className="d-block w-100"
-              src="https://res.cloudinary.com/dps6fac1c/image/upload/v1614091566/images/Distance-Education0_xvdava.jpg"
+              src="https://storage.googleapis.com/e-library-705ec.appspot.com/1758.jpg"
             />
             <Carousel.Caption>
               <NavLink to="/library">

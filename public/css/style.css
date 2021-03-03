@@ -6692,3 +6692,7 @@ body.home15-funiture-template {
   transition: filter 400ms, -webkit-filter 400ms;
   -webkit-transition: filter 400ms, -webkit-filter 400ms;
 }
+.webviewer {
+  height: 100vh;
+  margin-top: 1%;
+}

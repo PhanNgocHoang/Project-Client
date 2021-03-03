@@ -22,11 +22,14 @@ export const Books = (props) => {
         dispatch({ type: types.NEW_BOOKS, payload: result.data.data.data });
       }
     } catch (error) {
-      return Alert.error(`<div role="alert">Can Not Get New Book</div>`, {
-        html: true,
-        position: "top-right",
-        effect: "slide",
-      });
+      return Alert.error(
+        `<div role="alert">${error.response.data.message}</div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
     }
   };
   useEffect(() => {
@@ -52,6 +55,7 @@ export const Books = (props) => {
   };
   return (
     <div className="row">
+      <Alert stack={{ limit: 3 }} />
       {newBooks.map((item) => (
         <div className={props.position} key={item._id}>
           {/* start product image */}
