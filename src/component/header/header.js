@@ -27,8 +27,6 @@ import {
   loginWithFacebook,
   addCoins,
 } from "../../api/index.js";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSign } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../hooks/useAuth";
 import PayPal from "../../utils/paypal";
 const validationSchema = yup.object().shape({
@@ -262,12 +260,6 @@ export const Header = () => {
                         }}
                       >
                         Sign In
-                        <FontAwesomeIcon
-                          icon={faSign}
-                          color="#60ccdb"
-                          size="lg"
-                          style={{ height: "10%" }}
-                        />
                       </NavLink>
                     </li>
                   )}
@@ -278,12 +270,6 @@ export const Header = () => {
                     >
                       <NavLink to="#" onClick={() => setSigUpScreen(true)}>
                         Sign Up
-                        <FontAwesomeIcon
-                          icon={faHome}
-                          color="#60ccdb"
-                          size="lg"
-                          style={{ height: "10%" }}
-                        />
                       </NavLink>
                     </li>
                   )}
@@ -522,8 +508,9 @@ export const Header = () => {
                     appId="322522312399138"
                     autoLoad={false}
                     callback={responseFacebook}
+                    size="small"
+                    icon="fa-facebook"
                   />
-                  ,
                 </Modal.Footer>
               </Form>
             )}
