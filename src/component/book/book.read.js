@@ -25,7 +25,7 @@ export const ReadBook = (props) => {
             const { docViewer, Annotations } = instance;
             const annotManager = docViewer.getAnnotationManager();
             const Feature = instance.Feature;
-            // instance.disableFeatures([Feature.Download, Feature.Print]);
+            instance.disableFeatures([Feature.Download, Feature.Print]);
             docViewer.on("documentLoaded", () => {
               const rectangleAnnot = new Annotations.RectangleAnnotation();
               rectangleAnnot.PageNumber = 1;
