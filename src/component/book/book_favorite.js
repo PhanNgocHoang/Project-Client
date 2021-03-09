@@ -15,6 +15,9 @@ export const FavoriteBookComponent = () => {
     limit: 5,
   });
   const userId = localStorage.getItem("_id");
+  const user = useSelector((state) => {
+    return state.login.data;
+  });
   const formSignIn = useSelector((state) => {
     return state.formLoginStatus.data;
   });
@@ -24,15 +27,12 @@ export const FavoriteBookComponent = () => {
         dispatch({ type: "FORM_LOGIN_STATUS", payload: true });
       } else {
         const paramsString = queryString.stringify(pagination);
-        const response = await myFavorites(
-          localStorage.getItem("_id"),
-          paramsString
-        );
+        const response = await myFavorites(user._id, paramsString);
         setBooks(response.data.data);
       }
     } catch (error) {
       return Alert.error(
-        `<div role="alert">
+        `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
          ${error.response.data.message}</div>`,
         {
           html: true,

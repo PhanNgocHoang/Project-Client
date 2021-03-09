@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Books } from "../component/book/listBook";
 import { getAllBookTypes, getAllAuthor, getAllPublisher } from "../api/index";
 import { Form, Image } from "react-bootstrap";
-
+let filter = {
+  publisher: [],
+  bookType: [],
+  authors: [],
+};
 export const Library = () => {
-  let filter = {
-    publisher: [],
-    bookType: [],
-    authors: [],
-  };
   const [bookTypes, setBookTypes] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publishers, setPublishers] = useState([]);
@@ -75,17 +74,20 @@ export const Library = () => {
                           type="checkbox"
                           value={item._id}
                           onChange={(e) => {
-                            const value = e.target.checked ? item._id : null;
+                            const value = e.target.checked
+                              ? e.target.value
+                              : null;
                             if (value === null) {
-                              const bookType = filter.bookType;
-                              bookType.filter((item) => item !== item._id);
+                              const index = filter.bookType.findIndex(
+                                (item) => item === e.target.value
+                              );
+                              filter.bookType.splice(index, 1);
                               setPagination({
                                 ...pagination,
                                 bookType: filter.bookType,
                               });
                             } else {
                               filter.bookType.push(value);
-
                               setPagination({
                                 ...pagination,
                                 bookType: filter.bookType,
@@ -116,17 +118,20 @@ export const Library = () => {
                         type="checkbox"
                         value={item._id}
                         onChange={(e) => {
-                          const value = e.target.checked ? item._id : null;
+                          const value = e.target.checked
+                            ? e.target.value
+                            : null;
                           if (value === null) {
-                            const bookType = filter.authors;
-                            bookType.filter((item) => item !== item._id);
+                            const index = filter.authors.findIndex(
+                              (item) => item === e.target.value
+                            );
+                            filter.authors.splice(index, 1);
                             setPagination({
                               ...pagination,
                               authors: filter.authors,
                             });
                           } else {
                             filter.authors.push(value);
-
                             setPagination({
                               ...pagination,
                               authors: filter.authors,
@@ -155,10 +160,14 @@ export const Library = () => {
                         type="checkbox"
                         value={item._id}
                         onChange={(e) => {
-                          const value = e.target.checked ? item._id : null;
+                          const value = e.target.checked
+                            ? e.target.value
+                            : null;
                           if (value === null) {
-                            const bookType = filter.publisher;
-                            bookType.filter((item) => item !== item._id);
+                            const index = filter.publisher.findIndex(
+                              (item) => item === e.target.value
+                            );
+                            filter.publisher.splice(index, 1);
                             setPagination({
                               ...pagination,
                               publisher: filter.publisher,

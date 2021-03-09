@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -11,6 +11,7 @@ import {
   Popover,
   ListGroup,
   Image,
+  Spinner,
 } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -26,6 +27,7 @@ import {
   loginWithGoogle,
   loginWithFacebook,
   addCoins,
+  forgotPasswordApi,
 } from "../../api/index.js";
 import { useAuth } from "../../hooks/useAuth";
 import PayPal from "../../utils/paypal";
@@ -57,11 +59,19 @@ const validationMoneySchema = yup.object().shape({
     .min(1, "Minimum amount is 1 dollar")
     .required("Please enter a number money"),
 });
+const validationForgotPasswordSchema = yup.object().shape({
+  email: yup.string().email("Email invalid").required("Email is required"),
+});
 export const Header = () => {
   useAuth();
   const history = useHistory();
   const [formAddCoins, setFormAddCoins] = useState(false);
   const dispatch = useDispatch();
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(false);
+  const initialForgotPassword = {
+    email: "",
+  };
   const initialMoney = {
     money: 0,
   };
@@ -73,7 +83,6 @@ export const Header = () => {
     email: "",
     name: "",
     password: "",
-    // c_password: "",
     dob: "",
     photoUrl: "",
   };
@@ -88,16 +97,19 @@ export const Header = () => {
   });
   const closeSignIn = () => {
     dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
+    history.push("/");
   };
-
+  useEffect(() => {}, [user]);
   const closeSignUp = async function () {
     setSigUpScreen(false);
   };
   const uploadMyAvatar = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
+    setSubmitStatus(true);
     const result = await uploadAvatar(formData);
     initialValuesRegister.photoUrl = result.data.url;
+    setSubmitStatus(false);
   };
   const logOut = async () => {
     localStorage.removeItem("token");
@@ -106,6 +118,16 @@ export const Header = () => {
   };
   const responseGoogle = async (response) => {
     try {
+      if (!response.accessToken) {
+        return Alert.error(
+          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i> Sign in with Google failed</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
       const result = await loginWithGoogle({
         access_token: response.accessToken,
       });
@@ -114,16 +136,19 @@ export const Header = () => {
         dispatch({ type: "DATA_LOGIN", payload: result.data.user });
         localStorage.setItem("_id", result.data.user._id);
         dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
-        Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
-          html: true,
-          position: "top-right",
-          effect: "slide",
-        });
-        return history.push();
+        Alert.success(
+          `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+        return (window.location.href = "/");
       }
     } catch (error) {
       return Alert.error(
-        `<div role="alert">${error.response.data.message}</div>`,
+        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
         {
           html: true,
           position: "top-right",
@@ -134,6 +159,16 @@ export const Header = () => {
   };
   const responseFacebook = async (response) => {
     try {
+      if (!response.access_token) {
+        return Alert.error(
+          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i> Sign in with Facebook failed</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
       const result = await loginWithFacebook({
         access_token: response.accessToken,
         user_id: response.id,
@@ -143,16 +178,19 @@ export const Header = () => {
         localStorage.setItem("_id", result.data.user._id);
         dispatch({ type: "DATA_LOGIN", payload: result.data.user });
         dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
-        Alert.success(`<div role="alert"> Sign In Successfully </div>`, {
-          html: true,
-          position: "top-right",
-          effect: "slide",
-        });
-        return history.push();
+        Alert.success(
+          `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+        return (window.location.href = "/");
       }
     } catch (error) {
       return Alert.error(
-        `<div role="alert">${error.response.data.message}</div>`,
+        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i>${error.response.data.message}</div>`,
         {
           html: true,
           position: "top-right",
@@ -168,9 +206,8 @@ export const Header = () => {
         userId: user._id,
       });
       setPaymentMethod(false);
-      document.getElementById("user").click();
       return Alert.success(
-        `<div role="alert"> ${response.data.message} </div>`,
+        `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>  ${response.data.message} </div>`,
         {
           html: true,
           position: "top-right",
@@ -179,7 +216,7 @@ export const Header = () => {
       );
     } catch (error) {
       return Alert.error(
-        `<div role="alert">${error.response.data.message}</div>`,
+        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
         {
           html: true,
           position: "top-right",
@@ -189,15 +226,8 @@ export const Header = () => {
     }
   };
   const transactionError = (err) => {
-    return Alert.error(`<div role="alert">${err.message}</div>`, {
-      html: true,
-      position: "top-right",
-      effect: "slide",
-    });
-  };
-  const transactionCanceled = () => {
-    return Alert.success(
-      `<div role="alert">Transaction called successfully</div>`,
+    return Alert.error(
+      `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${err.message}</div>`,
       {
         html: true,
         position: "top-right",
@@ -205,6 +235,17 @@ export const Header = () => {
       }
     );
   };
+  const transactionCanceled = () => {
+    return Alert.success(
+      `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Transaction called successfully</div>`,
+      {
+        html: true,
+        position: "top-right",
+        effect: "slide",
+      }
+    );
+  };
+
   return (
     <div>
       <Alert stack={{ limit: 3 }} />
@@ -302,11 +343,28 @@ export const Header = () => {
                         </Popover.Title>
                         <Popover.Content>
                           <ListGroup variant="flush">
-                            <ListGroup.Item>
+                            <ListGroup.Item
+                              onClick={() => {
+                                document.getElementById("user").click();
+                              }}
+                            >
                               <NavLink to="/me">Update Profile</NavLink>
                             </ListGroup.Item>
-                            <ListGroup.Item>
+                            <ListGroup.Item
+                              onClick={() => {
+                                document.getElementById("user").click();
+                              }}
+                            >
                               <NavLink to="/myLibrary">My Library</NavLink>
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                              onClick={() => {
+                                document.getElementById("user").click();
+                              }}
+                            >
+                              <NavLink to="/addCoinsHistory">
+                                Add coins history
+                              </NavLink>
                             </ListGroup.Item>
                             <ListGroup.Item>
                               My eCoins: {user.wallet}
@@ -339,6 +397,7 @@ export const Header = () => {
                         className="border rounded-circle"
                         style={{
                           width: 35,
+                          height: 35,
                           marginLeft: "3%",
                           cursor: "pointer",
                         }}
@@ -410,24 +469,27 @@ export const Header = () => {
             initialValues={initialValues}
             onSubmit={async (values) => {
               try {
+                setSubmitStatus(true);
                 const result = await checkLogin(values);
                 if (result.status === 200) {
                   localStorage.setItem("token", result.data.token);
                   localStorage.setItem("_id", result.data.user._id);
+                  setSubmitStatus(false);
+                  dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
                   dispatch({ type: "DATA_LOGIN", payload: result.data.user });
                   Alert.success(
-                    `<div role="alert"> Sign In Successfully </div>`,
+                    `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
                     {
                       html: true,
                       position: "top-right",
                       effect: "slide",
                     }
                   );
-                  return history.push();
+                  return (window.location.href = "/");
                 }
               } catch (error) {
                 return Alert.error(
-                  `<div role="alert">${error.response.data.message}</div>`,
+                  `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
                   {
                     html: true,
                     position: "top-right",
@@ -494,6 +556,7 @@ export const Header = () => {
                   <Button
                     type="submit"
                     style={{ height: 47, width: 150, borderRadius: 4 }}
+                    disabled={submitStatus}
                   >
                     Sign in <i className="fa fa-sign-in" aria-hidden="true"></i>
                   </Button>
@@ -516,6 +579,21 @@ export const Header = () => {
             )}
           </Formik>
         </Modal.Body>
+        <Modal.Footer>
+          <u
+            style={{
+              color: "#66c2ff",
+              fontStyle: "oblique",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
+              setForgotPassword(true);
+            }}
+          >
+            Forgot Password{" "}
+          </u>
+        </Modal.Footer>
       </Modal>
 
       <Modal
@@ -536,12 +614,14 @@ export const Header = () => {
                 try {
                   values.role = "USER";
                   values.displayName = values.name;
+                  setSubmitStatus(true);
                   const result = await register(values);
                   if (result.status === 200) {
+                    setSubmitStatus(false);
                     setSigUpScreen(false);
                     return Alert.success(
-                      `<div role="alert">
-                                                 ${result.data.message}
+                      `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> 
+                      ${result.data.message}
                                                 </div>`,
                       {
                         html: true,
@@ -554,7 +634,7 @@ export const Header = () => {
                   console.log(error);
 
                   return Alert.error(
-                    `<div role="alert">
+                    `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
                                                 ${error.response.data.message}
                                                 </div>`,
                     {
@@ -709,6 +789,7 @@ export const Header = () => {
                   <Form.Group>
                     <Form.Label>Avatar</Form.Label>
                     <Form.File
+                      disabled={submitStatus}
                       id="photoUrl"
                       name="photoUrl"
                       accept="image/png, image/jpeg"
@@ -716,27 +797,21 @@ export const Header = () => {
                         uploadMyAvatar(e.target.files[0]);
                       }}
                     />
-                    <CardGroup className="mt-3">
-                      {/* {images.map((item) => (
-                        <Card style={{ width: "18rem" }} className="mb-3 ml-3">
-                          <i
-                            className="fa fa-times-circle"
-                            aria-hidden="true"
-                            style={{ float: "right" }}
-                          ></i>
-                          <Card.Img
-                            variant="top"
-                            src={item}
-                            style={{ width: "100%", height: "100%" }}
-                          />
-                        </Card>
-                      ))} */}
-                    </CardGroup>
+                    <CardGroup className="mt-3"></CardGroup>
                   </Form.Group>
                   <Modal.Footer>
-                    <Button variant="success" type="submit">
-                      Sign Up
-                      <i className="fa fa-user-plus" aria-hidden="true"></i>
+                    <Button
+                      type="submit"
+                      variant="success"
+                      disabled={submitStatus}
+                    >
+                      {submitStatus ? (
+                        <Spinner animation="border" variant="info" />
+                      ) : (
+                        <i className="fa fa-user-plus" aria-hidden="true">
+                          Sign Up
+                        </i>
+                      )}
                     </Button>
                   </Modal.Footer>
                 </Form>
@@ -833,6 +908,77 @@ export const Header = () => {
             Close
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal
+        show={forgotPassword}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        onHide={() => {
+          setForgotPassword(false);
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Forgot Password
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            initialValues={initialForgotPassword}
+            onSubmit={async (value) => {
+              try {
+                const result = await forgotPasswordApi(value);
+                setForgotPassword(false);
+                return Alert.success(
+                  `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>  ${result.data.message} </div>`,
+                  {
+                    html: true,
+                    position: "top-right",
+                    effect: "slide",
+                  }
+                );
+              } catch (error) {
+                setForgotPassword(false);
+                return Alert.error(
+                  `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>${error.response.data.message} </div>`,
+                  {
+                    html: true,
+                    position: "top-right",
+                    effect: "slide",
+                  }
+                );
+              }
+            }}
+            validationSchema={validationForgotPasswordSchema}
+          >
+            {(props) => (
+              <Form onSubmit={props.handleSubmit}>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  isInvalid={props.touched.email && props.errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {props.touched.email && props.errors.email}
+                </Form.Control.Feedback>
+                <Modal.Footer>
+                  <Button type="submit" disabled={submitStatus}>
+                    {submitStatus ? (
+                      <Spinner animation="border" variant="info" />
+                    ) : (
+                      "Send"
+                    )}
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
       </Modal>
     </div>
   );

@@ -7,8 +7,8 @@ import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
 import moment from "moment";
+import { useDispatch } from "react-redux";
 export const MyLibrary = () => {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
@@ -173,12 +173,14 @@ export const MyLibrary = () => {
                   </div>
                   <div className="product-price">
                     <span className="price">
-                      Started At: {moment(item.startedAt).format("YYYY-MM-DD")}
+                      Started At:{" "}
+                      {moment(item.startedAt).format("YYYY-MM-DD HH:MM")}
                     </span>
                   </div>
                   <div className="product-price">
                     <span className="price">
-                      Started At: {moment(item.endAt).format("YYYY-MM-DD")}
+                      Started At:{" "}
+                      {moment(item.endAt).format("YYYY-MM-DD HH:MM")}
                     </span>
                   </div>
                   {item.status === true ? (
@@ -293,22 +295,26 @@ export const MyLibrary = () => {
                   </div>
                   <div className="product-price">
                     <span className="price">
-                      Started At: {moment(item.startedAt).format("YYYY-MM-DD")}
+                      Started At:{" "}
+                      {moment(item.startedAt).format("YYYY-MM-DD HH:MM")}
                     </span>
                   </div>
                   <div className="product-price">
                     <span className="price">
-                      Started At: {moment(item.endAt).format("YYYY-MM-DD")}
+                      Started At:{" "}
+                      {moment(item.endAt).format("YYYY-MM-DD HH:MM")}
                     </span>
                   </div>
-                  <button
-                    className="btn btn-success btn-addto-cart"
-                    type="button"
-                    style={{ marginTop: 3 }}
-                    tabIndex={0}
-                  >
-                    Read
-                  </button>
+                  <NavLink to={`/books/read/${item._id}`}>
+                    <button
+                      className="btn btn-success btn-addto-cart"
+                      type="button"
+                      style={{ marginTop: 3 }}
+                      tabIndex={0}
+                    >
+                      Read
+                    </button>
+                  </NavLink>
                 </div>
               </div>
             ))}
@@ -404,12 +410,14 @@ export const MyLibrary = () => {
                   </div>
                   <div className="product-price">
                     <span className="price">
-                      Started At: {moment(item.startedAt).format("YYYY-MM-DD")}
+                      Started At:{" "}
+                      {moment(item.startedAt).format("YYYY-MM-DD HH:MM")}
                     </span>
                   </div>
                   <div className="product-price">
                     <span className="price">
-                      Started At: {moment(item.endAt).format("YYYY-MM-DD")}
+                      Started At:{" "}
+                      {moment(item.endAt).format("YYYY-MM-DD HH:MM")}
                     </span>
                   </div>
                   <Button

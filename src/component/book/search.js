@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "react-bootstrap";
 import { getBook } from "../../api/index";
 import queryString from "query-string";
 import Alert from "react-s-alert";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoins } from "@fortawesome/free-solid-svg-icons";
 export const Search = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [pagination, setPagination] = useState({
@@ -11,8 +13,7 @@ export const Search = () => {
     limit: 5,
     searchKey: "",
   });
-  const search = async (searchKey) => {
-    setPagination({ ...pagination, searchKey: searchKey });
+  const search = async () => {
     try {
       const paramsString = queryString.stringify(pagination);
       const result = await getBook(paramsString);
@@ -27,6 +28,9 @@ export const Search = () => {
       });
     }
   };
+  useEffect(() => {
+    search();
+  }, [pagination]);
   return (
     <div className="search">
       <div className="search__form">
@@ -42,12 +46,12 @@ export const Search = () => {
             aria-label="Search"
             value={pagination.searchKey}
             onChange={(event) => {
-              search(event.target.value);
+              setPagination({ ...pagination, searchKey: event.target.value });
             }}
           />
           <div style={{ marginTop: 10 }}>
             {searchResult.map((item) => (
-              <Link
+              <NavLink
                 key={item._id}
                 to={`/books/${item._id}`}
                 onClick={() => {
@@ -57,12 +61,19 @@ export const Search = () => {
                 <Card>
                   <Card.Header>{item.book_name}</Card.Header>
                   <Card.Body>
+                    <Card.Img
+                      src={item.images}
+                      style={{ width: 100, height: 100 }}
+                    />
                     <Card.Title>{item.authors[0].authorName}</Card.Title>
-                    <Card.Text>$ {item.price}</Card.Text>
-                    <Card.Text>{item.description}</Card.Text>
+                    <Card.Text>
+                      {" "}
+                      {item.price}{" "}
+                      <FontAwesomeIcon icon={faCoins} color="#64ccdb" /> / day
+                    </Card.Text>
                   </Card.Body>
                 </Card>
-              </Link>
+              </NavLink>
             ))}
           </div>
           <button

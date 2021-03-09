@@ -14,8 +14,11 @@ import {
 } from "../../api/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
+import {
+  faHeart as fasHeart,
+  faCoins,
+} from "@fortawesome/free-solid-svg-icons";
+import { NavLink, Redirect } from "react-router-dom";
 import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
@@ -65,10 +68,10 @@ export const BookDetails = (prop) => {
     const paramsString = queryString.stringify(reviewPage);
     const result = await getReview(bookId, paramsString);
     setReview(result.data.data);
-    dispatch({ type: "BOOK_REVIEWS", payload: result.data.data });
+    return dispatch({ type: "BOOK_REVIEWS", payload: result.data.data });
   };
   useEffect(() => {
-    getReviews();
+    return getReviews();
   }, [showWriteReview, reviewPage]);
   const addToMyFavorite = async (id) => {
     if (localStorage.getItem("_id") === null) {
@@ -145,8 +148,9 @@ export const BookDetails = (prop) => {
                   <span className="visually-hidden">Regular price</span>
                   <span className="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
                     <span id="ProductPrice-product-template">
-                      <span className="money">
-                        {bookDetail.price} eCoins/day
+                      <span className="money" style={{ color: "black" }}>
+                        {bookDetail.price}{" "}
+                        <FontAwesomeIcon icon={faCoins} color="#64ccdb" /> / day
                       </span>
                     </span>
                   </span>
@@ -159,7 +163,7 @@ export const BookDetails = (prop) => {
                       try {
                         if (!user._id) {
                           return Alert.warning(
-                            `<div role="alert">
+                            `<div role="alert"><i class="fas fa-exclamation-triangle"></i>
                                       Please sign in to read
                                       </div>`,
                             {
@@ -172,7 +176,7 @@ export const BookDetails = (prop) => {
                         const totalPrice = values.totalDate * bookDetail.price;
                         if (totalPrice > user.wallet) {
                           return Alert.warning(
-                            `<div role="alert">
+                            `<div role="alert"><i class="fas fa-exclamation-triangle"></i>
                                       Your eCoins are not enough to borrow this book
                                       </div>`,
                             {
@@ -187,14 +191,14 @@ export const BookDetails = (prop) => {
                         values.bookId = bookDetail._id;
                         values.endAt = moment(new Date())
                           .add(values.totalDate, "day")
-                          .format("YYYY-MM-DD");
+                          .format("YYYY-MM-DD HH:MM");
                         values.startedAt = moment(new Date()).format(
                           "YYYY-MM-DD"
                         );
 
                         const result = await createOrder(values);
-                        return Alert.success(
-                          `<div role="alert">
+                        Alert.success(
+                          `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>
                                       ${result.data.message}
                                       </div>`,
                           {
@@ -203,9 +207,14 @@ export const BookDetails = (prop) => {
                             effect: "slide",
                           }
                         );
+                        return (
+                          <Redirect
+                            to={`/books/read/${result.data.order._id}`}
+                          />
+                        );
                       } catch (error) {
                         return Alert.error(
-                          `<div role="alert">
+                          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
                                   ${error.response.data.message}</div>`,
                           {
                             html: true,
@@ -222,7 +231,7 @@ export const BookDetails = (prop) => {
                         <div style={{ marginBottom: 5 }}>
                           <span>Day number</span>
                           <Form.Control
-                            type="number"
+                            type="string"
                             name="totalDate"
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
@@ -320,7 +329,7 @@ export const BookDetails = (prop) => {
                           await createReview(values);
                           setWriteReview(false);
                           return Alert.success(
-                            `<div role="alert">
+                            `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i>
                                       Write review successfully
                                       </div>`,
                             {
@@ -332,6 +341,7 @@ export const BookDetails = (prop) => {
                         } catch (error) {
                           return Alert.error(
                             `<div role="alert">
+                           <i class="fa fa-times-circle" aria-hidden="true"></i>
                                   ${error.response.data.message}</div>`,
                             {
                               html: true,

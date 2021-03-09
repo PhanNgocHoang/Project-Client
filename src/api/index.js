@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const jwt = localStorage.getItem("token");
+
 const instance = axios.create({
   baseURL: `https://e-libraryapi.herokuapp.com/`,
   // baseURL: `http://localhost:4000`,
@@ -27,6 +28,12 @@ export const loginWithFacebook = async function (params) {
 };
 export const register = async function (params) {
   return await instance.post("/auth/register", params);
+};
+export const changePassword = async function (params) {
+  return await instance.put("/auth/changePassword", params);
+};
+export const forgotPasswordApi = async function (params) {
+  return await instance.put("/auth/forgetPassword", params);
 };
 export const getAllBookTypes = async function () {
   return await instance.get("/typebook/getAll");
@@ -77,10 +84,11 @@ export const addCoins = async function (params) {
   return await instance.post("/payment/updateWallet", params);
 };
 export const getBookToRead = async function (userId, orderId) {
-  return await instance.get(`books/read/${userId}/${orderId}`);
+  return await instance.get(`/books/read/${userId}/${orderId}`);
 };
-export const urlSignInWithGoogle = "http://localhost:4000/auth/google";
-// "https://e-libraryapi.herokuapp.com/auth/google";
-export const urlSignInWithFacebook =
-  // "http://localhost:4000/auth/facebook";
-  "https://e-libraryapi.herokuapp.com/auth/facebook";
+export const updateMe = async function (params) {
+  return await instance.put("/auth/updateMe", params);
+};
+export const PaymentHistory = async function (params) {
+  return await instance.get(`/payment/history?${params}`);
+};
