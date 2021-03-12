@@ -10,7 +10,7 @@ export const Search = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 5,
+    limit: 1,
     searchKey: "",
   });
   const search = async () => {
@@ -30,6 +30,7 @@ export const Search = () => {
   };
   useEffect(() => {
     search();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
   return (
     <div className="search">
@@ -46,7 +47,11 @@ export const Search = () => {
             aria-label="Search"
             value={pagination.searchKey}
             onChange={(event) => {
-              setPagination({ ...pagination, searchKey: event.target.value });
+              setPagination({
+                ...pagination,
+                searchKey: event.target.value,
+                limit: pagination.limit + 4,
+              });
             }}
           />
           <div style={{ marginTop: 10 }}>

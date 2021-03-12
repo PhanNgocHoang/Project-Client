@@ -70,9 +70,13 @@ export const BookDetails = (prop) => {
     setReview(result.data.data);
     return dispatch({ type: "BOOK_REVIEWS", payload: result.data.data });
   };
-  useEffect(() => {
-    return getReviews();
-  }, [showWriteReview, reviewPage]);
+  useEffect(
+    () => {
+      return getReviews();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showWriteReview, reviewPage]
+  );
   const addToMyFavorite = async (id) => {
     if (localStorage.getItem("_id") === null) {
       dispatch({ type: "FORM_LOGIN_STATUS", payload: true });

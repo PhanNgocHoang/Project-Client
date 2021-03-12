@@ -38,6 +38,7 @@ export const MyLibrary = () => {
   };
   useEffect(() => {
     getBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, isLoad]);
   const getBooksStatus = async () => {
     try {
@@ -57,6 +58,7 @@ export const MyLibrary = () => {
   };
   useEffect(() => {
     getBooksStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationStatus]);
   const getBookCanRead = async () => {
     setPaginationStatus(paginationStatus);

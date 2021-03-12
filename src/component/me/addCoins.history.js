@@ -21,6 +21,7 @@ export const AddCoinsHistory = () => {
   };
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
   const user = useSelector((state) => {
     return state.login.data;

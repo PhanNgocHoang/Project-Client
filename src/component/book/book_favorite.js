@@ -42,9 +42,13 @@ export const FavoriteBookComponent = () => {
       );
     }
   };
-  useEffect(() => {
-    getBookByUser();
-  }, [pagination, isLoad, formSignIn]);
+  useEffect(
+    () => {
+      getBookByUser();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pagination, isLoad, formSignIn]
+  );
   const removeFavorites = async (id) => {
     await FavoriteBook({
       bookId: id,

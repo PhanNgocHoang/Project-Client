@@ -117,86 +117,70 @@ export const Header = () => {
     window.location.href = "/";
   };
   const responseGoogle = async (response) => {
-    try {
-      if (!response.accessToken) {
-        return Alert.error(
-          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i> Sign in with Google failed</div>`,
-          {
-            html: true,
-            position: "top-right",
-            effect: "slide",
-          }
-        );
-      }
-      const result = await loginWithGoogle({
-        access_token: response.accessToken,
-      });
-      if (result.status === 200) {
-        localStorage.setItem("token", result.data.token);
-        dispatch({ type: "DATA_LOGIN", payload: result.data.user });
-        localStorage.setItem("_id", result.data.user._id);
-        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
-        Alert.success(
-          `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
-          {
-            html: true,
-            position: "top-right",
-            effect: "slide",
-          }
-        );
-        return (window.location.href = "/");
-      }
-    } catch (error) {
-      return Alert.error(
-        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
-        {
-          html: true,
-          position: "top-right",
-          effect: "slide",
+    if (response.accessToken) {
+      try {
+        const result = await loginWithGoogle({
+          access_token: response.accessToken,
+        });
+        if (result.status === 200) {
+          localStorage.setItem("token", result.data.token);
+          dispatch({ type: "DATA_LOGIN", payload: result.data.user });
+          localStorage.setItem("_id", result.data.user._id);
+          dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
+          Alert.success(
+            `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
+            {
+              html: true,
+              position: "top-right",
+              effect: "slide",
+            }
+          );
+          return (window.location.href = "/");
         }
-      );
+      } catch (error) {
+        return Alert.error(
+          `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
     }
   };
   const responseFacebook = async (response) => {
-    try {
-      if (!response.access_token) {
-        return Alert.error(
-          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i> Sign in with Facebook failed</div>`,
-          {
-            html: true,
-            position: "top-right",
-            effect: "slide",
-          }
-        );
-      }
-      const result = await loginWithFacebook({
-        access_token: response.accessToken,
-        user_id: response.id,
-      });
-      if (result.status === 200) {
-        localStorage.setItem("token", result.data.token);
-        localStorage.setItem("_id", result.data.user._id);
-        dispatch({ type: "DATA_LOGIN", payload: result.data.user });
-        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
-        Alert.success(
-          `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
-          {
-            html: true,
-            position: "top-right",
-            effect: "slide",
-          }
-        );
-        return (window.location.href = "/");
-      }
-    } catch (error) {
-      return Alert.error(
-        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i>${error.response.data.message}</div>`,
-        {
-          html: true,
-          position: "top-right",
-          effect: "slide",
+    if (response.accessToken) {
+      try {
+        const result = await loginWithFacebook({
+          access_token: response.accessToken,
+          user_id: response.id,
+        });
+        if (result.status === 200) {
+          localStorage.setItem("token", result.data.token);
+          localStorage.setItem("_id", result.data.user._id);
+          dispatch({ type: "DATA_LOGIN", payload: result.data.user });
+          dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
+          Alert.success(
+            `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
+            {
+              html: true,
+              position: "top-right",
+              effect: "slide",
+            }
+          );
+          return;
         }
-      );
+      } catch (error) {
+        return Alert.error(
+          `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i>${error.response.data.message}</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
     }
   };
   const transactionSuccess = async (data) => {
@@ -286,7 +270,11 @@ export const Header = () => {
                   <li className="lvl1 parent megamenu">
                     <NavLink to="/favorite">Favorite</NavLink>
                   </li>
-                  {user.email ? null : (
+                  {user.email ? (
+                    <li>
+                      <NavLink to="/myLibrary">My Library</NavLink>
+                    </li>
+                  ) : (
                     <li
                       className="lvl1 parent megamenu"
                       style={{ cursor: "pointer" }}
@@ -355,15 +343,8 @@ export const Header = () => {
                                 document.getElementById("user").click();
                               }}
                             >
-                              <NavLink to="/myLibrary">My Library</NavLink>
-                            </ListGroup.Item>
-                            <ListGroup.Item
-                              onClick={() => {
-                                document.getElementById("user").click();
-                              }}
-                            >
                               <NavLink to="/addCoinsHistory">
-                                Add coins history
+                                Coin deposit history
                               </NavLink>
                             </ListGroup.Item>
                             <ListGroup.Item>
@@ -416,11 +397,12 @@ export const Header = () => {
         </div>
       </div>
       <div className="mobile-nav-wrapper" role="navigation">
-        <div>
-          <i className="icon anm anm-times-l pull-right" /> Close Menu
-        </div>
         <ul id="MobileNav" className="mobile-nav">
-          {user.email ? null : (
+          {user.email ? (
+            <li>
+              <NavLink to="/myLibrary">My Library</NavLink>
+            </li>
+          ) : (
             <li className="lvl1 parent megamenu" style={{ cursor: "pointer" }}>
               <NavLink
                 to="#"

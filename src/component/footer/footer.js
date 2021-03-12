@@ -28,11 +28,7 @@ export const Footer = () => {
                 <ul className="addressFooter">
                   <li>
                     <i className="icon anm anm-map-marker-al" />
-                    <p>
-                      55 Gallaxy Enque,
-                      <br />
-                      2568 steet, 23568 NY
-                    </p>
+                    <p>Greenwich of university of Viet Nam</p>
                   </li>
                   <li className="phone">
                     <i className="icon anm anm-phone-s" />

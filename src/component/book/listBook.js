@@ -51,6 +51,7 @@ export const Books = (props) => {
   };
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.pagination, isLoad]);
   const newBooks = useSelector((state) => {
     return state.newBooks.data;
