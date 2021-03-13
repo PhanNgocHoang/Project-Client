@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Image } from "react-bootstrap";
 import "react-tabs/style/react-tabs.css";
 import * as yup from "yup";
 import {
@@ -194,7 +194,7 @@ export const BookDetails = (prop) => {
                         values.userId = user._id;
                         values.bookId = bookDetail._id;
                         values.endAt = moment(new Date())
-                          .add(values.totalDate, "day")
+                          .add(values.totalDate * 24, "hours")
                           .format("YYYY-MM-DD HH:MM");
                         values.startedAt = moment(new Date()).format(
                           "YYYY-MM-DD"
@@ -421,7 +421,7 @@ export const BookDetails = (prop) => {
                           <div className="spr-review" key={review._id}>
                             <div className="spr-review-header">
                               <h3 className="spr-review-header-title">
-                                <img
+                                <Image
                                   src={review.user.photoUrl}
                                   alt=""
                                   className="border rounded-circle"

@@ -124,7 +124,6 @@ export const Header = () => {
         });
         if (result.status === 200) {
           localStorage.setItem("token", result.data.token);
-          dispatch({ type: "DATA_LOGIN", payload: result.data.user });
           localStorage.setItem("_id", result.data.user._id);
           dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
           Alert.success(
@@ -159,7 +158,6 @@ export const Header = () => {
         if (result.status === 200) {
           localStorage.setItem("token", result.data.token);
           localStorage.setItem("_id", result.data.user._id);
-          dispatch({ type: "DATA_LOGIN", payload: result.data.user });
           dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
           Alert.success(
             `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,

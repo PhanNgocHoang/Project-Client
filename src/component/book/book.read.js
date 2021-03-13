@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faVolumeUp, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 import "./audio.custom.css";
+import { Spinner } from "react-bootstrap";
 
 export const ReadBook = (props) => {
   const orderId = props.match.params.orderId;
@@ -87,51 +88,67 @@ export const ReadBook = (props) => {
   return (
     <div>
       <Alert stack={{ limit: 3 }} />
-      {fileType === "pdf" ? (
-        <div className="webviewer" ref={viewDiv}></div>
-      ) : (
-        <div style={{ marginTop: 140, marginBottom: 50 }}>
-          <Image
-            src={book.images}
-            style={{
-              width: 400,
-              marginLeft: "40%",
-              marginRight: "40%",
-              marginBottom: 10,
-            }}
-          />
-          <div
-            style={{
-              marginLeft: "42%",
-              marginRight: "40%",
-              marginBottom: 10,
-              width: "100%",
-            }}
-          >
-            <ul style={{ listStyle: "none" }}>
-              <li style={{ marginLeft: 10, marginRight: 10 }}>
-                {book.book_name}
-              </li>
-              <li style={{ marginLeft: 130, marginRight: 150 }}>
-                {book.authors ? book.authors[0].authorName : null}
-              </li>
-            </ul>
-          </div>
-          <div style={{ backgroundColor: "#29bed2" }}>
-            <AudioPlayer
-              autoPlay
-              src="https://storage.googleapis.com/e-library-705ec.appspot.com/the-adventures-of-huckleberry-finn-001-notice.97.mp3"
-              customIcons={{
-                play: <FontAwesomeIcon icon={faPlayCircle} color="#64ccdb" />,
-                pause: <FontAwesomeIcon icon={faPauseCircle} color="#64ccdb" />,
-                volume: <FontAwesomeIcon icon={faVolumeUp} color="#64ccdb" />,
-                volumeMute: (
-                  <FontAwesomeIcon icon={faVolumeMute} color="#64ccdb" />
-                ),
+      {fileType !== "" ? (
+        fileType === "pdf" ? (
+          <div className="webviewer" ref={viewDiv}></div>
+        ) : (
+          <div style={{ marginTop: 140, marginBottom: 50 }}>
+            <Image
+              src={book.images}
+              style={{
+                width: 400,
+                marginLeft: "40%",
+                marginRight: "40%",
+                marginBottom: 10,
               }}
             />
+            <div
+              style={{
+                marginLeft: "42%",
+                marginRight: "40%",
+                marginBottom: 10,
+                width: "100%",
+              }}
+            >
+              <ul style={{ listStyle: "none" }}>
+                <li style={{ marginLeft: 10, marginRight: 10 }}>
+                  {book.book_name}
+                </li>
+                <li style={{ marginLeft: 130, marginRight: 150 }}>
+                  {book.authors ? book.authors[0].authorName : null}
+                </li>
+              </ul>
+            </div>
+            <div style={{ backgroundColor: "#29bed2" }}>
+              <AudioPlayer
+                autoPlay
+                src="https://storage.googleapis.com/e-library-705ec.appspot.com/the-adventures-of-huckleberry-finn-001-notice.97.mp3"
+                customIcons={{
+                  play: <FontAwesomeIcon icon={faPlayCircle} color="#64ccdb" />,
+                  pause: (
+                    <FontAwesomeIcon icon={faPauseCircle} color="#64ccdb" />
+                  ),
+                  volume: <FontAwesomeIcon icon={faVolumeUp} color="#64ccdb" />,
+                  volumeMute: (
+                    <FontAwesomeIcon icon={faVolumeMute} color="#64ccdb" />
+                  ),
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )
+      ) : (
+        <Spinner
+          animation="border"
+          variant="info"
+          style={{
+            width: 200,
+            height: 200,
+            marginTop: "5%",
+            marginLeft: "45%",
+            marginRight: "45%",
+          }}
+        />
       )}
     </div>
   );

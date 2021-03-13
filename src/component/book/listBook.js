@@ -18,10 +18,7 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 const validationSchema = yup.object().shape({
-  totalDate: yup
-    .number()
-    .min(1, "Please enter a day number")
-    .required("Please enter a date number"),
+  totalDate: yup.number().required("Please enter a date number"),
 });
 export const Books = (props) => {
   const initialValues = {
@@ -188,7 +185,7 @@ export const Books = (props) => {
                 values.userId = user._id;
                 values.bookId = book._id;
                 values.endAt = moment(new Date())
-                  .add(values.totalDate, "day")
+                  .add(values.totalDate * 24, "hours")
                   .format("YYYY-MM-DD HH:MM");
                 values.startedAt = moment(new Date()).format(
                   "YYYY-MM-DD HH:MM"

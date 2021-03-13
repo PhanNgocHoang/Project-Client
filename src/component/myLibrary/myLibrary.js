@@ -181,8 +181,7 @@ export const MyLibrary = () => {
                   </div>
                   <div className="product-price">
                     <span className="price">
-                      Started At:{" "}
-                      {moment(item.endAt).format("YYYY-MM-DD HH:MM")}
+                      End At: {moment(item.endAt).format("YYYY-MM-DD HH:MM")}
                     </span>
                   </div>
                   {item.status === true ? (
@@ -197,13 +196,14 @@ export const MyLibrary = () => {
                       </button>
                     </NavLink>
                   ) : (
-                    <Button
-                      className="btn btn-danger"
-                      disabled
-                      style={{ marginTop: 3 }}
-                    >
-                      Expired
-                    </Button>
+                    <NavLink to={`books/${item.bookId._id}`}>
+                      <Button
+                        className="btn btn-danger"
+                        style={{ marginTop: 3 }}
+                      >
+                        Expired
+                      </Button>
+                    </NavLink>
                   )}
                 </div>
               </div>

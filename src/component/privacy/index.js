@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 
 export const Privacy = () => {
   return (
-    <div style={{ marginTop: "5%" }}>
+    <div style={{ marginTop: "5%", marginBottom: "24%" }}>
       <Container>
         <Row style={{ marginBottom: 10 }}>
           <Col style={{ fontWeight: "bold", fontSize: 30 }}>Legal</Col>
