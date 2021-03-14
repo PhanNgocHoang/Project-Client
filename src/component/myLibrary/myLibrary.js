@@ -105,11 +105,7 @@ export const MyLibrary = () => {
                 key={item._id}
                 style={{ marginBottom: 3, marginTop: 3 }}
               >
-                {/* start product image */}
-
                 <div className="product-image">
-                  {/* start product image */}
-
                   <div className="grid-view-item__link">
                     <Image
                       style={{ width: 400, height: 300 }}
@@ -145,10 +141,7 @@ export const MyLibrary = () => {
                       </button>
                     </div>
                   </div>
-                  {/* end product button */}
                 </div>
-                {/* end product image */}
-                {/*start product details */}
                 <div className="product-details text-center">
                   {/* product name */}
                   <NavLink to={`books/${item.bookId._id}`}>

@@ -15,9 +15,6 @@ export const FavoriteBookComponent = () => {
     limit: 5,
   });
   const userId = localStorage.getItem("_id");
-  const user = useSelector((state) => {
-    return state.login.data;
-  });
   const formSignIn = useSelector((state) => {
     return state.formLoginStatus.data;
   });
