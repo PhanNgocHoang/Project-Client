@@ -27,7 +27,7 @@ export const FavoriteBookComponent = () => {
         dispatch({ type: "FORM_LOGIN_STATUS", payload: true });
       } else {
         const paramsString = queryString.stringify(pagination);
-        const response = await myFavorites(user._id, paramsString);
+        const response = await myFavorites(userId, paramsString);
         setBooks(response.data.data);
       }
     } catch (error) {

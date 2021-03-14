@@ -121,7 +121,7 @@ export const ReadBook = (props) => {
             </div>
             <div style={{ backgroundColor: "#29bed2" }}>
               <AudioPlayer
-                autoPlay
+                autoPlay={true}
                 src="https://storage.googleapis.com/e-library-705ec.appspot.com/the-adventures-of-huckleberry-finn-001-notice.97.mp3"
                 customIcons={{
                   play: <FontAwesomeIcon icon={faPlayCircle} color="#64ccdb" />,
