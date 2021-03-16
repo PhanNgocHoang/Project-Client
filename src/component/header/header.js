@@ -137,6 +137,8 @@ export const Header = () => {
           return (window.location.href = "/");
         }
       } catch (error) {
+        console.log(error);
+
         return Alert.error(
           `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
           {
@@ -167,7 +169,7 @@ export const Header = () => {
               effect: "slide",
             }
           );
-          return;
+          return (window.location.href = "/");
         }
       } catch (error) {
         return Alert.error(

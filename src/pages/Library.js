@@ -11,6 +11,14 @@ export const Library = () => {
   const [bookTypes, setBookTypes] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publishers, setPublishers] = useState([]);
+  const [publisherPagination, setPublisherPagination] = useState({
+    page: 1,
+    limit: 5,
+  });
+  const [bookTypePagination, setBookTypePagination] = useState({
+    page: 1,
+    limit: 5,
+  });
   const getBookTypes = async () => {
     const result = await getAllBookTypes();
     setBookTypes(result.data.data);

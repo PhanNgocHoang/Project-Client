@@ -189,14 +189,13 @@ export const MyLibrary = () => {
                       </button>
                     </NavLink>
                   ) : (
-                    <NavLink to={`books/${item.bookId._id}`}>
-                      <Button
-                        className="btn btn-danger"
-                        style={{ marginTop: 3 }}
-                      >
-                        Expired
-                      </Button>
-                    </NavLink>
+                    <Button
+                      className="btn btn-danger"
+                      style={{ marginTop: 3 }}
+                      disabled={true}
+                    >
+                      Expired
+                    </Button>
                   )}
                 </div>
               </div>

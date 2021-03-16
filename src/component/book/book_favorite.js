@@ -6,6 +6,7 @@ import queryString from "query-string";
 import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
+import { Spinner } from "react-bootstrap";
 export const FavoriteBookComponent = () => {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
@@ -87,46 +88,60 @@ export const FavoriteBookComponent = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {books.map((book) => (
-                    <tr>
-                      <td
-                        className="product-remove text-center"
-                        valign="middle"
-                      >
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => {
-                            removeFavorites(book._id);
-                          }}
+                  {books.length > 0 ? (
+                    books.map((book) => (
+                      <tr>
+                        <td
+                          className="product-remove text-center"
+                          valign="middle"
                         >
-                          <i className="icon icon anm anm-times-l" />
-                        </button>
-                      </td>
-                      <td className="product-thumbnail text-center">
-                        <NavLink to={`books/${book._id}`}>
-                          <img
-                            src={book.images}
-                            alt=""
-                            title
-                            style={{ height: 60, width: 60 }}
-                          />
-                        </NavLink>
-                      </td>
-                      <td
-                        className="product-name"
-                        style={{ height: 100, width: 400 }}
-                      >
-                        <p className="no-margin">
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => {
+                              removeFavorites(book._id);
+                            }}
+                          >
+                            <i className="icon icon anm anm-times-l" />
+                          </button>
+                        </td>
+                        <td className="product-thumbnail text-center">
                           <NavLink to={`books/${book._id}`}>
-                            {book.book_name}
+                            <img
+                              src={book.images}
+                              alt=""
+                              title
+                              style={{ height: 60, width: 60 }}
+                            />
                           </NavLink>
-                        </p>
-                      </td>
-                      <td className="product-price text-center">
-                        <span className="amount">{book.price}</span>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td
+                          className="product-name"
+                          style={{ height: 100, width: 400 }}
+                        >
+                          <p className="no-margin">
+                            <NavLink to={`books/${book._id}`}>
+                              {book.book_name}
+                            </NavLink>
+                          </p>
+                        </td>
+                        <td className="product-price text-center">
+                          <span className="amount">{book.price}</span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <Spinner
+                      animation="border"
+                      variant="info"
+                      style={{
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginLeft: "45%",
+                        height: 100,
+                        width: 100,
+                      }}
+                    />
+                  )}
                 </tbody>
               </table>
             </div>
