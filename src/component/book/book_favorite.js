@@ -6,7 +6,7 @@ import queryString from "query-string";
 import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Image } from "react-bootstrap";
 export const FavoriteBookComponent = () => {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
@@ -90,7 +90,7 @@ export const FavoriteBookComponent = () => {
                 <tbody>
                   {books.length > 0 ? (
                     books.map((book) => (
-                      <tr>
+                      <tr key={book._id}>
                         <td
                           className="product-remove text-center"
                           valign="middle"
@@ -106,10 +106,8 @@ export const FavoriteBookComponent = () => {
                         </td>
                         <td className="product-thumbnail text-center">
                           <NavLink to={`books/${book._id}`}>
-                            <img
+                            <Image
                               src={book.images}
-                              alt=""
-                              title
                               style={{ height: 60, width: 60 }}
                             />
                           </NavLink>

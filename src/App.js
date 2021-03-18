@@ -4,7 +4,7 @@ import { Search } from "./component/book/search";
 import { RouterComponent } from "./component/router";
 const App = () => {
   return (
-    <div className="template-index home2-default">
+    <div className="template-index home-default">
       <div className="pageWrapper">
         <Search />
         <Header />

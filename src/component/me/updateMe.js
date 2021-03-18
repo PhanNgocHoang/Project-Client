@@ -102,9 +102,9 @@ export const Me = () => {
       <Tabs>
         <TabList>
           <Tab>Update Information</Tab>
-          {user.googleId === null || user.fbId === null ? (
+          {user.googleId !== null || user.fbId !== null ? null : (
             <Tab>Change Password</Tab>
-          ) : null}
+          )}
         </TabList>
         <TabPanel>
           <Card border="info">
@@ -187,7 +187,7 @@ export const Me = () => {
             </Card.Body>
           </Card>
         </TabPanel>
-        {user.googleId === null || user.fbId === null ? (
+        {user.googleId !== null || user.fbId !== null ? null : (
           <TabPanel>
             <Card border="info">
               <Card.Header>Update Profile: </Card.Header>
@@ -282,7 +282,7 @@ export const Me = () => {
               </Card.Body>
             </Card>
           </TabPanel>
-        ) : null}
+        )}
       </Tabs>
     </Container>
   );

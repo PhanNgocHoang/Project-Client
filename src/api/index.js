@@ -35,14 +35,14 @@ export const changePassword = async function (params) {
 export const forgotPasswordApi = async function (params) {
   return await instance.put("/auth/forgetPassword", params);
 };
-export const getAllBookTypes = async function () {
-  return await instance.get("/typebook/getAll");
+export const getAllBookTypes = async function (params) {
+  return await instance.get(`/typebook?${params}`);
 };
-export const getAllAuthor = async function () {
-  return await instance.get("/author/getAll");
+export const getAllAuthor = async function (params) {
+  return await instance.get(`/author?${params}`);
 };
-export const getAllPublisher = async function () {
-  return await instance.get("/publisher/getAll");
+export const getAllPublisher = async function (params) {
+  return await instance.get(`/publisher?${params}`);
 };
 export const getMe = async function () {
   return await instance.get("/auth/me");
