@@ -3,7 +3,8 @@ import axios from "axios";
 const jwt = localStorage.getItem("token");
 
 const instance = axios.create({
-  baseURL: `https://e-libraryapi.herokuapp.com/`,
+  // baseURL: `https://e-libraryapi.herokuapp.com/`,
+  baseURL: `https://e-libraryapi.azurewebsites.net/`,
   // baseURL: `http://localhost:4000`,
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +12,8 @@ const instance = axios.create({
   },
 });
 const upload = axios.create({
-  baseURL: `https://e-libraryapi.herokuapp.com/`,
+  baseURL: `https://e-libraryapi.azurewebsites.net/`,
+  // baseURL: `https://e-libraryapi.herokuapp.com/`,
   // baseURL: `http://localhost:4000`,
   headers: {
     "Content-Type": "multipart/form-data",
