@@ -122,23 +122,19 @@ export const Header = () => {
         const result = await loginWithGoogle({
           access_token: response.accessToken,
         });
-        if (result.status === 200) {
-          localStorage.setItem("token", result.data.token);
-          localStorage.setItem("_id", result.data.user._id);
-          dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
-          Alert.success(
-            `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
-            {
-              html: true,
-              position: "top-right",
-              effect: "slide",
-            }
-          );
-          return (window.location.href = "/");
-        }
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("_id", result.data.user._id);
+        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
+        Alert.success(
+          `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+        return (window.location.href = "/");
       } catch (error) {
-        console.log(error);
-
         return Alert.error(
           `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
           {
@@ -157,20 +153,18 @@ export const Header = () => {
           access_token: response.accessToken,
           user_id: response.id,
         });
-        if (result.status === 200) {
-          localStorage.setItem("token", result.data.token);
-          localStorage.setItem("_id", result.data.user._id);
-          dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
-          Alert.success(
-            `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
-            {
-              html: true,
-              position: "top-right",
-              effect: "slide",
-            }
-          );
-          return (window.location.href = "/");
-        }
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("_id", result.data.user._id);
+        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
+        Alert.success(
+          `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+        return (window.location.href = "/");
       } catch (error) {
         return Alert.error(
           `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i>${error.response.data.message}</div>`,
@@ -458,7 +452,6 @@ export const Header = () => {
                   localStorage.setItem("_id", result.data.user._id);
                   setSubmitStatus(false);
                   dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
-                  dispatch({ type: "DATA_LOGIN", payload: result.data.user });
                   Alert.success(
                     `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
                     {
