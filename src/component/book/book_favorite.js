@@ -10,6 +10,7 @@ import { Spinner, Image } from "react-bootstrap";
 export const FavoriteBookComponent = () => {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
+  const [bookStatus, setBookStatus] = useState(false);
   const [isLoad, setLoad] = useState(false);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -26,6 +27,7 @@ export const FavoriteBookComponent = () => {
       } else {
         const paramsString = queryString.stringify(pagination);
         const response = await myFavorites(userId, paramsString);
+        setBookStatus(true);
         setBooks(response.data.data);
       }
     } catch (error) {
@@ -88,45 +90,49 @@ export const FavoriteBookComponent = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {books.length > 0 ? (
-                    books.map((book) => (
-                      <tr key={book._id}>
-                        <td
-                          className="product-remove text-center"
-                          valign="middle"
-                        >
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => {
-                              removeFavorites(book._id);
-                            }}
+                  {bookStatus === true ? (
+                    books.length === 0 ? (
+                      <span>No Data</span>
+                    ) : (
+                      books.map((book) => (
+                        <tr key={book._id}>
+                          <td
+                            className="product-remove text-center"
+                            valign="middle"
                           >
-                            <i className="icon icon anm anm-times-l" />
-                          </button>
-                        </td>
-                        <td className="product-thumbnail text-center">
-                          <NavLink to={`books/${book._id}`}>
-                            <Image
-                              src={book.images}
-                              style={{ height: 60, width: 60 }}
-                            />
-                          </NavLink>
-                        </td>
-                        <td
-                          className="product-name"
-                          style={{ height: 100, width: 400 }}
-                        >
-                          <p className="no-margin">
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => {
+                                removeFavorites(book._id);
+                              }}
+                            >
+                              <i className="icon icon anm anm-times-l" />
+                            </button>
+                          </td>
+                          <td className="product-thumbnail text-center">
                             <NavLink to={`books/${book._id}`}>
-                              {book.book_name}
+                              <Image
+                                src={book.images}
+                                style={{ height: 60, width: 60 }}
+                              />
                             </NavLink>
-                          </p>
-                        </td>
-                        <td className="product-price text-center">
-                          <span className="amount">{book.price}</span>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                          <td
+                            className="product-name"
+                            style={{ height: 100, width: 400 }}
+                          >
+                            <p className="no-margin">
+                              <NavLink to={`books/${book._id}`}>
+                                {book.book_name}
+                              </NavLink>
+                            </p>
+                          </td>
+                          <td className="product-price text-center">
+                            <span className="amount">{book.price}</span>
+                          </td>
+                        </tr>
+                      ))
+                    )
                   ) : (
                     <Spinner
                       animation="border"

@@ -238,9 +238,9 @@ export const Library = () => {
                     style={{ marginLeft: 100 }}
                     to="#"
                     onClick={() => {
-                      setBookTypePagination({
-                        ...bookTypePagination,
-                        limit: bookTypePagination.limit - 5,
+                      setAuthorPagination({
+                        ...authorPagination,
+                        limit: authorPagination.limit - 5,
                       });
                     }}
                   >
@@ -316,9 +316,9 @@ export const Library = () => {
                     style={{ marginLeft: 100 }}
                     to="#"
                     onClick={() => {
-                      setBookTypePagination({
-                        ...bookTypePagination,
-                        limit: bookTypePagination.limit - 5,
+                      setPublisherPagination({
+                        ...publisherPagination,
+                        limit: publisherPagination.limit - 5,
                       });
                     }}
                   >
