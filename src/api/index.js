@@ -10,6 +10,10 @@ const instance = axios.create({
     "Content-Type": "application/json",
     Authorization: "Bearer " + jwt,
   },
+  proxy: {
+    host: "103.82.24.170",
+    port: 3000,
+  },
 });
 const upload = axios.create({
   baseURL: `http://103.82.24.170:3000/`,
@@ -17,6 +21,10 @@ const upload = axios.create({
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "multipart/form-data",
+  },
+  proxy: {
+    host: "103.82.24.170",
+    port: 3000,
   },
 });
 export const checkLogin = async function (params) {
