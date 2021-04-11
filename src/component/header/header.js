@@ -124,7 +124,6 @@ export const Header = () => {
         });
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("_id", result.data.user._id);
-        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
         Alert.success(
           `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
           {
@@ -155,7 +154,6 @@ export const Header = () => {
         });
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("_id", result.data.user._id);
-        dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
         Alert.success(
           `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
           {
@@ -451,7 +449,6 @@ export const Header = () => {
                   localStorage.setItem("token", result.data.token);
                   localStorage.setItem("_id", result.data.user._id);
                   setSubmitStatus(false);
-                  dispatch({ type: "FORM_LOGIN_STATUS", payload: false });
                   Alert.success(
                     `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> Sign In Successfully </div>`,
                     {
