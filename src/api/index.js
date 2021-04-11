@@ -3,17 +3,19 @@ import axios from "axios";
 const jwt = localStorage.getItem("token");
 
 const instance = axios.create({
-  // baseURL: `http://103.82.24.170:3000/`,
-  baseURL: `https://e-libraryapi.azurewebsites.net`,
+  baseURL: `http://103.82.24.170:3000/`,
+  // baseURL: `https://e-libraryapi.azurewebsites.net`,
   headers: {
+    "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
     Authorization: "Bearer " + jwt,
   },
 });
 const upload = axios.create({
-  // baseURL: `http://103.82.24.170:3000/`,
-  baseURL: `https://e-libraryapi.azurewebsites.net`,
+  baseURL: `http://103.82.24.170:3000/`,
+  // baseURL: `https://e-libraryapi.azurewebsites.net`,
   headers: {
+    "Access-Control-Allow-Origin": "*",
     "Content-Type": "multipart/form-data",
   },
 });

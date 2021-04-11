@@ -7,6 +7,7 @@ const fetchMeApi = (jwt) => {
   return axios
     .get("https://e-libraryapi.azurewebsites.net/auth/me", {
       headers: {
+        "Access-Control-Allow-Origin": "*",
         Authorization: "Bearer " + jwt,
       },
     })
