@@ -6,25 +6,15 @@ const instance = axios.create({
   baseURL: `http://103.82.24.170:3000/`,
   // baseURL: `https://e-libraryapi.azurewebsites.net`,
   headers: {
-    "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
     Authorization: "Bearer " + jwt,
-  },
-  proxy: {
-    host: "103.82.24.170",
-    port: 3000,
   },
 });
 const upload = axios.create({
   baseURL: `http://103.82.24.170:3000/`,
   // baseURL: `https://e-libraryapi.azurewebsites.net`,
   headers: {
-    "Access-Control-Allow-Origin": "*",
     "Content-Type": "multipart/form-data",
-  },
-  proxy: {
-    host: "103.82.24.170",
-    port: 3000,
   },
 });
 export const checkLogin = async function (params) {

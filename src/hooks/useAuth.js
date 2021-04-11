@@ -5,14 +5,10 @@ import axios from "axios";
 
 const fetchMeApi = (jwt) => {
   return axios
-    .get("https://e-libraryapi.azurewebsites.net/auth/me", {
+    .get("http://103.82.24.170:3000/auth/me", {
       headers: {
         "Access-Control-Allow-Origin": "*",
         Authorization: "Bearer " + jwt,
-      },
-      proxy: {
-        host: "103.82.24.170",
-        port: 3000,
       },
     })
     .then((res) => res.data);
