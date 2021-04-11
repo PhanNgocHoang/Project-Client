@@ -30,7 +30,7 @@ const validationSchema = yup.object().shape({
 const orderValidationSchema = yup.object().shape({
   totalDate: yup
     .number()
-    .min(1, "Please enter a day number")
+    .min(0.1, "Min date is 0.1")
     .required("Please enter a date number"),
 });
 export const BookDetails = (prop) => {
@@ -193,13 +193,10 @@ export const BookDetails = (prop) => {
                         values.price = totalPrice;
                         values.userId = user._id;
                         values.bookId = bookDetail._id;
-                        values.endAt = moment(new Date())
+                        values.endAt = moment()
                           .add(values.totalDate * 24, "hours")
-                          .format("YYYY-MM-DD HH:MM");
-                        values.startedAt = moment(new Date()).format(
-                          "YYYY-MM-DD"
-                        );
-
+                          .toISOString();
+                        values.startedAt = moment().toISOString();
                         const result = await createOrder(values);
                         Alert.success(
                           `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>

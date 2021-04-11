@@ -5,7 +5,7 @@ import axios from "axios";
 
 const fetchMeApi = (jwt) => {
   return axios
-    .get("https://e-libraryapi.herokuapp.com/auth/me", {
+    .get("http://103.82.24.170:3000/auth/me", {
       headers: {
         Authorization: "Bearer " + jwt,
       },

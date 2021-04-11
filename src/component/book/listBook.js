@@ -18,7 +18,10 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 const validationSchema = yup.object().shape({
-  totalDate: yup.number().required("Please enter a date number"),
+  totalDate: yup
+    .number()
+    .min(0.1, "Min date is 0.1")
+    .required("Please enter a date number"),
 });
 export const Books = (props) => {
   const initialValues = {
@@ -178,9 +181,9 @@ export const Books = (props) => {
                       values.bookId = book._id;
                       values.endAt = moment(new Date())
                         .add(values.totalDate * 24, "hours")
-                        .format("YYYY-MM-DD HH:MM");
+                        .format("YYYY-MM-DD HH:MM:SS");
                       values.startedAt = moment(new Date()).format(
-                        "YYYY-MM-DD HH:MM"
+                        "YYYY-MM-DD HH:MM:SS"
                       );
                       setFormBorrow(false);
                       const result = await createOrder(values);
