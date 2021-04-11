@@ -10,6 +10,10 @@ const fetchMeApi = (jwt) => {
         "Access-Control-Allow-Origin": "*",
         Authorization: "Bearer " + jwt,
       },
+      proxy: {
+        host: "103.82.24.170",
+        port: 3000,
+      },
     })
     .then((res) => res.data);
 };
