@@ -29,6 +29,7 @@ import {
   addCoins,
   forgotPasswordApi,
 } from "../../api/index.js";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import PayPal from "../../utils/paypal";
 const validationSchema = yup.object().shape({
@@ -460,6 +461,7 @@ export const Header = () => {
                   return (window.location.href = "/");
                 }
               } catch (error) {
+                setSubmitStatus(false);
                 return Alert.error(
                   `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
                   {

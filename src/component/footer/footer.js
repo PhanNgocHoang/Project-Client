@@ -44,15 +44,6 @@ export const Footer = () => {
           </div>
           {/*End Footer Links*/}
           <hr />
-          <div className="footer-bottom">
-            <div className="row">
-              {/*Footer Copyright*/}
-              <div className="col-12 col-sm-12 col-md-12 col-lg-12 order-1 order-md-0 order-lg-0 order-sm-1 copyright text-center">
-                <span /> Copyright Templates Hub
-              </div>
-              {/*End Footer Copyright*/}
-            </div>
-          </div>
         </div>
       </div>
     </footer>

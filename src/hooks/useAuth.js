@@ -5,7 +5,7 @@ import axios from "axios";
 
 const fetchMeApi = (jwt) => {
   return axios
-    .get("https://bd60d76c70c1.ngrok.io/auth/me", {
+    .get("http://localhost:4000/auth/me", {
       headers: {
         "Access-Control-Allow-Origin": "*",
         Authorization: "Bearer " + jwt,
