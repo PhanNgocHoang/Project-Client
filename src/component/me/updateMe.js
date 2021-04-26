@@ -165,7 +165,7 @@ export const Me = () => {
                   </span>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>Day of birth</Form.Label>
+                  <Form.Label>Date of birth</Form.Label>
                   <Form.Control
                     type="date"
                     name="dob"

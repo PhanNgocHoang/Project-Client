@@ -12,6 +12,7 @@ import {
   ListGroup,
   Image,
   Spinner,
+  Card,
 } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -23,12 +24,14 @@ import GoogleLogin from "react-google-login";
 import {
   checkLogin,
   uploadAvatar,
-  register,
+  signUp,
   loginWithGoogle,
   loginWithFacebook,
   addCoins,
   forgotPasswordApi,
 } from "../../api/index.js";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import PayPal from "../../utils/paypal";
 const validationSchema = yup.object().shape({
@@ -40,7 +43,7 @@ const validationSchema = yup.object().shape({
 });
 const validationSchemaRegister = yup.object().shape({
   email: yup.string().email("Email invalid").required("Email is required"),
-  name: yup.string().required("Name is required"),
+  displayName: yup.string().required("Name is required"),
   password: yup
     .string()
     .min(6, "Password is less than 6 characters")
@@ -51,7 +54,6 @@ const validationSchemaRegister = yup.object().shape({
     .required("Confirm Password is required")
     .oneOf([yup.ref("password")], "Confirm password not match with password"),
   dob: yup.date().required("Day of birth is required"),
-  photoUrl: yup.string().required("Please choose a avatar"),
 });
 const validationMoneySchema = yup.object().shape({
   money: yup
@@ -64,7 +66,14 @@ const validationForgotPasswordSchema = yup.object().shape({
 });
 export const Header = () => {
   useAuth();
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(validationSchemaRegister),
+    mode: "all",
+    shouldFocusError: true,
+  });
   const history = useHistory();
+  const [image, setImage] = useState();
+  const [updateStatus, setUpdateStatus] = useState(false);
   const [formAddCoins, setFormAddCoins] = useState(false);
   const dispatch = useDispatch();
   const [forgotPassword, setForgotPassword] = useState(false);
@@ -78,13 +87,6 @@ export const Header = () => {
   const initialValues = {
     email: "",
     password: "",
-  };
-  const initialValuesRegister = {
-    email: "",
-    name: "",
-    password: "",
-    dob: "",
-    photoUrl: "",
   };
   const [numberMoney, setNumberMoney] = useState(0);
   const signInScreenStatus = useSelector((state) => {
@@ -104,12 +106,51 @@ export const Header = () => {
     setSigUpScreen(false);
   };
   const uploadMyAvatar = async (file) => {
-    const formData = new FormData();
-    formData.append("image", file);
-    setSubmitStatus(true);
-    const result = await uploadAvatar(formData);
-    initialValuesRegister.photoUrl = result.data.url;
-    setSubmitStatus(false);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      setUpdateStatus(true);
+      const result = await uploadAvatar(formData);
+      setImage(result.data.url);
+      setUpdateStatus(false);
+    } catch (error) {
+      return Alert.error(
+        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${
+          error.response.data.message ?? error.message
+        }</div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
+    }
+  };
+  const handleRegister = async (data) => {
+    try {
+      data.photoUrl = image;
+      data.role = "USER";
+      const response = await signUp(data);
+      return Alert.success(
+        `<div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> ${response.data.message} </div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
+    } catch (error) {
+      return Alert.error(
+        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${
+          error.response.data.message ?? error.message
+        }</div>`,
+        {
+          html: true,
+          position: "top-right",
+          effect: "slide",
+        }
+      );
+    }
   };
   const logOut = async () => {
     localStorage.removeItem("token");
@@ -460,6 +501,7 @@ export const Header = () => {
                   return (window.location.href = "/");
                 }
               } catch (error) {
+                setSubmitStatus(false);
                 return Alert.error(
                   `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i> ${error.response.data.message}</div>`,
                   {
@@ -580,215 +622,161 @@ export const Header = () => {
         </Modal.Header>
         <Modal.Body>
           <div className="card-body card-block">
-            <Formik
-              initialValues={initialValuesRegister}
-              onSubmit={async (values) => {
-                try {
-                  values.role = "USER";
-                  values.displayName = values.name;
-                  setSubmitStatus(true);
-                  const result = await register(values);
-                  if (result.status === 200) {
-                    setSubmitStatus(false);
-                    setSigUpScreen(false);
-                    return Alert.success(
-                      `<div role="alert"> <i class="fa fa-check-circle" aria-hidden="true"></i> 
-                      ${result.data.message}
-                                                </div>`,
-                      {
-                        html: true,
-                        position: "top-right",
-                        effect: "slide",
-                      }
-                    );
-                  }
-                } catch (error) {
-                  console.log(error);
-
-                  return Alert.error(
-                    `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
-                                                ${error.response.data.message}
-                                                </div>`,
-                    {
-                      html: true,
-                      position: "top-right",
-                      effect: "slide",
-                    }
-                  );
-                }
-              }}
-              validationSchema={validationSchemaRegister}
+            <Form
+              className="form-horizontal ml-5"
+              onSubmit={handleSubmit(handleRegister)}
             >
-              {(props) => (
-                <Form
-                  className="form-horizontal ml-5"
-                  onSubmit={props.handleSubmit}
-                >
-                  <Form.Group>
-                    <Form.Row>
-                      <Form.Label column lg={3.5}>
-                        Email
-                      </Form.Label>
-                      <Col>
-                        <Form.Control
-                          lg={4}
-                          type="email"
-                          id="email"
-                          name="email"
-                          className="ml-5"
-                          style={{ width: "60%" }}
-                          placeholder="Enter your email"
-                          onChange={(event) => {
-                            initialValuesRegister.email = event.target.value;
-                          }}
-                          onBlur={props.handleBlur}
-                          isInvalid={props.touched.email && props.errors.email}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {props.touched.email && props.errors.email}
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Row>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Row>
-                      <Form.Label column lg={3.5}>
-                        Name
-                      </Form.Label>
-                      <Col>
-                        <Form.Control
-                          lg={4}
-                          type="name"
-                          id="name"
-                          name="name"
-                          className="ml-5"
-                          style={{ width: "60%" }}
-                          placeholder="Enter your name"
-                          onChange={(event) => {
-                            initialValuesRegister.name = event.target.value;
-                          }}
-                          onBlur={props.handleBlur}
-                          isInvalid={props.touched.name && props.errors.name}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {props.touched.name && props.errors.name}
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Row>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Row>
-                      <Form.Label column lg={1.7}>
-                        Password
-                      </Form.Label>
-                      <Col>
-                        <Form.Control
-                          lg={4}
-                          type="password"
-                          id="password"
-                          name="password"
-                          className="ml-3"
-                          style={{ width: "63%" }}
-                          placeholder="Enter your password"
-                          onChange={(event) => {
-                            initialValuesRegister.password = event.target.value;
-                          }}
-                          onBlur={props.handleBlur}
-                          isInvalid={
-                            props.touched.password && props.errors.password
-                          }
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {props.touched.password && props.errors.password}
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Row>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Row>
-                      <Form.Label column lg={3.5}>
-                        Confirm Password
-                      </Form.Label>
-                      <Col>
-                        <Form.Control
-                          lg={3}
-                          type="password"
-                          id="c_password"
-                          name="c_password"
-                          style={{ width: "63%" }}
-                          placeholder="Enter confirm password"
-                          onChange={(event) => {
-                            initialValuesRegister.c_password =
-                              event.target.value;
-                          }}
-                          onBlur={props.handleBlur}
-                          isInvalid={
-                            props.touched.c_password && props.errors.c_password
-                          }
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {props.touched.c_password && props.errors.c_password}
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Row>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Row>
-                      <Form.Label column lg={3.5}>
-                        Day Of Birth
-                      </Form.Label>
-                      <Col>
-                        <Form.Control
-                          lg={3}
-                          type="Date"
-                          id="dob"
-                          name="dob"
-                          className="ml-3"
-                          style={{ width: "63%" }}
-                          placeholder="Enter your day of birth"
-                          onChange={(event) => {
-                            initialValuesRegister.dob = event.target.value;
-                          }}
-                          onBlur={props.handleBlur}
-                          isInvalid={props.touched.dob && props.errors.dob}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {props.touched.dob && props.errors.dob}
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Row>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Avatar</Form.Label>
-                    <Form.File
-                      disabled={submitStatus}
-                      id="photoUrl"
-                      name="photoUrl"
-                      accept="image/png, image/jpeg"
-                      onChange={(e) => {
-                        uploadMyAvatar(e.target.files[0]);
-                      }}
+              <Form.Group>
+                <Form.Row>
+                  <Form.Label column lg={3.5}>
+                    Email
+                  </Form.Label>
+                  <Col>
+                    <Form.Control
+                      lg={4}
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="ml-5"
+                      ref={register}
+                      style={{ width: "60%" }}
+                      placeholder="Enter your email"
+                      isInvalid={errors.email?.message}
                     />
-                    <CardGroup className="mt-3"></CardGroup>
-                  </Form.Group>
-                  <Modal.Footer>
-                    <Button
-                      type="submit"
-                      variant="success"
-                      disabled={submitStatus}
-                    >
-                      {submitStatus ? (
-                        <Spinner animation="border" variant="info" />
-                      ) : (
-                        <i className="fa fa-user-plus" aria-hidden="true">
-                          Sign Up
-                        </i>
-                      )}
-                    </Button>
-                  </Modal.Footer>
-                </Form>
-              )}
-            </Formik>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.email?.message}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Form.Row>
+              </Form.Group>
+              <Form.Group>
+                <Form.Row>
+                  <Form.Label column lg={3.5}>
+                    Name
+                  </Form.Label>
+                  <Col>
+                    <Form.Control
+                      lg={4}
+                      type="name"
+                      id="name"
+                      name="displayName"
+                      ref={register}
+                      className="ml-5"
+                      style={{ width: "60%" }}
+                      placeholder="Enter your name"
+                      isInvalid={errors.name?.message}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.name?.message}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Form.Row>
+              </Form.Group>
+              <Form.Group>
+                <Form.Row>
+                  <Form.Label column lg={1.7}>
+                    Password
+                  </Form.Label>
+                  <Col>
+                    <Form.Control
+                      lg={4}
+                      type="password"
+                      id="password"
+                      name="password"
+                      ref={register}
+                      className="ml-3"
+                      style={{ width: "63%" }}
+                      placeholder="Enter your password"
+                      isInvalid={errors.password?.message}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.password?.message}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Form.Row>
+              </Form.Group>
+              <Form.Group>
+                <Form.Row>
+                  <Form.Label column lg={3.5}>
+                    Confirm Password
+                  </Form.Label>
+                  <Col>
+                    <Form.Control
+                      lg={3}
+                      type="password"
+                      id="c_password"
+                      name="c_password"
+                      ref={register}
+                      style={{ width: "63%" }}
+                      placeholder="Enter confirm password"
+                      isInvalid={errors.c_password?.message}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.c_password?.message}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Form.Row>
+              </Form.Group>
+              <Form.Group>
+                <Form.Row>
+                  <Form.Label column lg={3.5}>
+                    Day Of Birth
+                  </Form.Label>
+                  <Col>
+                    <Form.Control
+                      lg={3}
+                      type="Date"
+                      id="dob"
+                      name="dob"
+                      className="ml-3"
+                      ref={register}
+                      style={{ width: "63%" }}
+                      placeholder="Enter your day of birth"
+                      isInvalid={errors.dob?.message}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.dob?.message}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Form.Row>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Avatar</Form.Label>
+                <Form.File
+                  disabled={updateStatus}
+                  id="photoUrl"
+                  name="photoUrl"
+                  accept="image/png, image/jpeg"
+                  onChange={(e) => {
+                    uploadMyAvatar(e.target.files[0]);
+                  }}
+                />
+                {image ? (
+                  <Card style={{ width: "18rem" }} className="mt-3 mb-3 ml-3">
+                    <Card.Img
+                      variant="top"
+                      src={image}
+                      style={{ width: "30%", height: "100%" }}
+                    />
+                  </Card>
+                ) : null}
+              </Form.Group>
+              <Modal.Footer>
+                <Button
+                  type="submit"
+                  variant="success"
+                  disabled={image ? submitStatus : true}
+                >
+                  {submitStatus ? (
+                    <Spinner animation="border" variant="info" />
+                  ) : (
+                    <i className="fa fa-user-plus" aria-hidden="true">
+                      Sign Up
+                    </i>
+                  )}
+                </Button>
+              </Modal.Footer>
+            </Form>
           </div>
         </Modal.Body>
       </Modal>
