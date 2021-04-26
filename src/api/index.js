@@ -26,7 +26,7 @@ export const loginWithGoogle = async function (params) {
 export const loginWithFacebook = async function (params) {
   return await instance.post("/auth/facebook", params);
 };
-export const register = async function (params) {
+export const signUp = async function (params) {
   return await instance.post("/auth/register", params);
 };
 export const changePassword = async function (params) {
