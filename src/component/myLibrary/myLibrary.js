@@ -33,7 +33,17 @@ export const MyLibrary = () => {
       );
       setBooks(response.data.data);
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message) {
+        return Alert.error(
+          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
+         ${error.response.data.message}</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
     }
   };
   useEffect(() => {
@@ -53,7 +63,17 @@ export const MyLibrary = () => {
         setBooksExpired(response.data.data);
       }
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message) {
+        return Alert.error(
+          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
+         ${error.response.data.message}</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
     }
   };
   useEffect(() => {

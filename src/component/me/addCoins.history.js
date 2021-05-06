@@ -16,7 +16,17 @@ export const AddCoinsHistory = () => {
       const response = await PaymentHistory(paramsString);
       setHistory(response.data.data);
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message) {
+        return Alert.error(
+          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
+         ${error.response.data.message}</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      };
     }
   };
   useEffect(() => {

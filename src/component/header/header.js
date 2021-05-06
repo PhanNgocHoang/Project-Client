@@ -113,13 +113,12 @@ export const Header = () => {
       setImage(result.data.url);
       setUpdateStatus(false);
     } catch (error) {
-      console.log(error);
-
+      setUpdateStatus(false);
       return Alert.error(
         `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${
           error.response.data.message
             ? error.response.data.message
-            : error.message
+            : "Please choose file type jpg, png and size less 5mb"
         }</div>`,
         {
           html: true,
