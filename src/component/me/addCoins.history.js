@@ -4,6 +4,7 @@ import queryString from "query-string";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
+import Alert from "react-s-alert";
 export const AddCoinsHistory = () => {
   const [history, setHistory] = useState([]);
   const [pagination, setPagination] = useState({
