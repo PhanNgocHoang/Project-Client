@@ -61,15 +61,18 @@ export const Me = () => {
       dispatch({ type: "DATA_LOGIN", payload: update.data });
       setUpdates(false);
     } catch (error) {
-      return Alert.error(
-        `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
+      if (error.response.data.message){
+        return Alert.error(
+          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
          ${error.response.data.message}</div>`,
-        {
-          html: true,
-          position: "top-right",
-          effect: "slide",
-        }
-      );
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
+        
     }
   };
   const changePhotoUrl = async (file) => {
@@ -82,9 +85,13 @@ export const Me = () => {
       dispatch({ type: "DATA_LOGIN", payload: response.data });
       setChangePhotoUrl(false);
     } catch (error) {
+      setChangePhotoUrl(false);
       return Alert.error(
-        `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
-         ${error.response.data.message}</div>`,
+        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i> ${
+          error.response.data.message
+            ? error.response.data.message
+            : "Please choose file type jpg, png and size less 5mb"
+        }</div>`,
         {
           html: true,
           position: "top-right",
@@ -208,15 +215,17 @@ export const Me = () => {
                       );
                       return (window.location.href = "/me");
                     } catch (error) {
-                      return Alert.error(
-                        `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i>
+                      if (error.response.data.message) {
+                        return Alert.error(
+                          `<div role="alert"> <i class="fa fa-times-circle" aria-hidden="true"></i>
          ${error.response.data.message}</div>`,
-                        {
-                          html: true,
-                          position: "top-right",
-                          effect: "slide",
-                        }
-                      );
+                          {
+                            html: true,
+                            position: "top-right",
+                            effect: "slide",
+                          }
+                        );
+                      }
                     }
                   }}
                   validationSchema={validationSchemaChangePass}

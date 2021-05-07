@@ -37,7 +37,17 @@ export const Books = (props) => {
       const result = await getBook(paramsString);
       dispatch({ type: types.NEW_BOOKS, payload: result.data.data.data });
     } catch (error) {
-      return;
+      if (error.response.data) {
+        return Alert.error(
+          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
+         ${error.response.data.message}</div>`,
+          {
+            html: true,
+            position: "top-right",
+            effect: "slide",
+          }
+        );
+      }
     }
   };
   useEffect(() => {
@@ -202,15 +212,17 @@ export const Books = (props) => {
                         <Redirect to={`/books/read/${result.data.order._id}`} />
                       );
                     } catch (error) {
-                      return Alert.error(
-                        `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
-                                  ${error.response.data.message}</div>`,
-                        {
-                          html: true,
-                          position: "top-right",
-                          effect: "slide",
-                        }
-                      );
+                      if (error.response.data.message) {
+                        return Alert.error(
+                          `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
+         ${error.response.data.message}</div>`,
+                          {
+                            html: true,
+                            position: "top-right",
+                            effect: "slide",
+                          }
+                        );
+                      }
                     }
                   }}
                 >
