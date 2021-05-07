@@ -37,7 +37,7 @@ export const Books = (props) => {
       const result = await getBook(paramsString);
       dispatch({ type: types.NEW_BOOKS, payload: result.data.data.data });
     } catch (error) {
-      if (error.response.data.message) {
+      if (error.response.data) {
         return Alert.error(
           `<div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>
          ${error.response.data.message}</div>`,
